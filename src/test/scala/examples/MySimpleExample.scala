@@ -39,7 +39,8 @@ case class MySimpleExample(path: String, overwrite: Boolean) {
   }
 }
 
-import org.tupol.spark.config._
+import org.tupol.scala.config.Configurator
+import org.tupol.scala.config._
 
 /**
  * This is the configurator implementation for the MySimpleExample case class

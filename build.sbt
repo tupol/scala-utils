@@ -1,25 +1,14 @@
 
-name := "spark-utils"
+name := "scala-utils"
 
 organization := "org.tupol"
 
 scalaVersion := "2.11.12"
 
-val sparkVersion = "2.1.1"
-
 // ------------------------------
 // DEPENDENCIES AND RESOLVERS
 
 updateOptions := updateOptions.value.withCachedResolution(true)
-
-lazy val providedDependencies = Seq(
-  "org.apache.spark" %% "spark-core" % sparkVersion force(),
-  "org.apache.spark" %% "spark-sql" % sparkVersion force(),
-  "org.apache.spark" %% "spark-mllib" % sparkVersion force(),
-  "org.apache.spark" %% "spark-streaming" % sparkVersion force()
-)
-
-libraryDependencies ++= providedDependencies.map(_ % "provided")
 
 libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
@@ -40,7 +29,6 @@ publishArtifact in Test := true
 // ------------------------------
 // TEST COVERAGE
 
-scoverage.ScoverageKeys.coverageExcludedPackages := "org.apache.spark.ml.param.shared.*"
 scoverage.ScoverageKeys.coverageExcludedFiles := ".*BuildInfo.*"
 
 
@@ -72,8 +60,8 @@ homepage := Some(url("https://github.com/tupol"))
 
 scmInfo := Some(
   ScmInfo(
-    url("https://github.com/tupol/spark-utils.git"),
-    "scm:git@github.com:tupol/spark-utils.git"
+    url("https://github.com/tupol/scala-utils.git"),
+    "scm:git@github.com:tupol/scala-utils.git"
   )
 )
 
@@ -92,7 +80,7 @@ lazy val root = (project in file(".")).
   enablePlugins(BuildInfoPlugin).
   settings(
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.tupol.spark.info"
+    buildInfoPackage := "org.tupol.scala.info"
   )
 
 buildInfoKeys ++= Seq[BuildInfoKey](
@@ -107,4 +95,3 @@ buildInfoKeys ++= Seq[BuildInfoKey](
 buildInfoOptions += BuildInfoOption.BuildTime
 buildInfoOptions += BuildInfoOption.ToMap
 buildInfoOptions += BuildInfoOption.ToJson
-

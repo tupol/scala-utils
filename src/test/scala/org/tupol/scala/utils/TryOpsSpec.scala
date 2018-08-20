@@ -1,4 +1,4 @@
-package org.tupol.spark.utils
+package org.tupol.scala.utils
 
 import org.scalatest.{ FunSuite, Matchers }
 

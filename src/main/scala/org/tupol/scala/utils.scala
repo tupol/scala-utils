@@ -21,13 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package org.tupol.spark
-
-import java.sql.Timestamp
-import java.time.LocalDateTime
-
-import org.json4s.JsonAST.JString
-import org.json4s.{ CustomSerializer, Serializer }
+package org.tupol.scala
 
 import scala.util.{ Failure, Success, Try }
 
@@ -133,65 +127,6 @@ package object utils {
     val result = res.map(code)
     res.map(r => Try(r.close()))
     result
-  }
-
-  /**
-   * This is a small and probably wrong conversion to JSON format.
-   *
-   * Besides the basic conversion, this also serializes the LocalDateFormat
-   *
-   * @param input input to be converted to JSON format
-   * @return
-   */
-  def toJson(input: AnyRef) = {
-    //TODO Find a nicer more comprehensive solution
-    import org.json4s.NoTypeHints
-    import org.json4s.jackson.Serialization
-
-    implicit val formats = Serialization.formats(NoTypeHints) ++ TimeSerializers
-    Serialization.write(input)
-  }
-
-  /**
-   * Serializers for Time types that use commonly use in MLX suite
-   * @return
-   */
-  lazy val TimeSerializers: Seq[Serializer[_]] = {
-    /**
-     * Serializer / deserializer for LocalDateFormat
-     */
-    case object LDTSerializer extends CustomSerializer[LocalDateTime](format => (
-      { case JString(s) => LocalDateTime.parse(s) },
-      { case ldt: LocalDateTime => JString(ldt.toString) }
-    ))
-    /**
-     * Serializer / deserializer for Timestamp
-     */
-    case object SqlTimestampSerializer extends CustomSerializer[Timestamp](format => (
-      { case JString(ts) => Timestamp.valueOf(LocalDateTime.parse(ts)) },
-      { case ts: Timestamp => JString(ts.toLocalDateTime.toString) }
-    ))
-
-    Seq(LDTSerializer, SqlTimestampSerializer)
-  }
-
-  /**
-   * Product decorator
-   * @param product
-   */
-  implicit class ProductOps(product: Product) {
-    import org.json4s.Extraction
-    import org.json4s.NoTypeHints
-    import org.json4s.jackson.Serialization
-
-    /**
-     * Convert the product into a map keyed by field name
-     * @return
-     */
-    def toMap: Map[String, Any] = {
-      val formats = Serialization.formats(NoTypeHints) ++ TimeSerializers
-      Extraction.decompose(product)(formats).values.asInstanceOf[Map[String, Any]]
-    }
   }
 
 }

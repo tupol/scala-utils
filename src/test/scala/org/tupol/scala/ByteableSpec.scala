@@ -1,4 +1,4 @@
-package org.tupol.spark.byteable
+package org.tupol.scala.byteable
 
 import java.nio.ByteBuffer
 

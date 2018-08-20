@@ -1,4 +1,4 @@
-package org.tupol.spark.config
+package org.tupol.scala.config
 
 import com.typesafe.config.ConfigException.BadValue
 import org.scalacheck.Prop.forAll

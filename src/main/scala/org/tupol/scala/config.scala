@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package org.tupol.spark
+package org.tupol.scala
 
 import com.typesafe.config.ConfigException.{ BadValue, Missing }
 import com.typesafe.config.{ Config, ConfigObject }
