@@ -42,8 +42,8 @@ case class MyComplexExample(example: MySimpleExample, separatorChar: String, sep
   }
 }
 
-import org.tupol.scala.config.Configurator
-import org.tupol.scala.config._
+import org.tupol.utils.config.Configurator
+import org.tupol.utils.config._
 
 /**
  * This is the configurator implementation for the MyExample case class

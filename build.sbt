@@ -3,7 +3,7 @@ name := "scala-utils"
 
 organization := "org.tupol"
 
-scalaVersion := "2.11.12"
+crossScalaVersions := Seq("2.11.12", "2.12.6")
 
 // ------------------------------
 // DEPENDENCIES AND RESOLVERS
@@ -11,11 +11,11 @@ scalaVersion := "2.11.12"
 updateOptions := updateOptions.value.withCachedResolution(true)
 
 libraryDependencies ++= Seq(
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
+  "com.typesafe.scala-logging" % "scala-logging" % "3.9.0" cross CrossVersion.binary,
   "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-  "org.scalaz" %% "scalaz-core" % "7.2.5",
-  "org.scalacheck" %% "scalacheck" % "1.12.5" % "test",
-  "org.scalatest" %% "scalatest" % "2.2.6" % "test",
+  "org.scalaz" % "scalaz-core" % "7.2.26" cross CrossVersion.binary,
+  "org.scalacheck" % "scalacheck" % "1.14.0" % "test" cross CrossVersion.binary,
+  "org.scalatest" % "scalatest" % "3.0.5" % "test" cross CrossVersion.binary,
   "com.typesafe" % "config" % "1.3.0"
 )
 // ------------------------------
@@ -80,7 +80,7 @@ lazy val root = (project in file(".")).
   enablePlugins(BuildInfoPlugin).
   settings(
     buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoPackage := "org.tupol.scala.info"
+    buildInfoPackage := "org.tupol.utils.info"
   )
 
 buildInfoKeys ++= Seq[BuildInfoKey](

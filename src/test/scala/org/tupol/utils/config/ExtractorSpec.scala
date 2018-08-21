@@ -1,4 +1,4 @@
-package org.tupol.scala.config
+package org.tupol.utils.config
 
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{ FunSuite, Matchers }
