@@ -36,8 +36,7 @@ class TryOpsSpec extends FunSuite with Matchers {
     val loggerFailure = ArrayBuffer[String]()
     Success(1).log(
       message => loggerSuccess.append(message),
-      throwable => loggerFailure.append(throwable.getMessage)
-    )
+      throwable => loggerFailure.append(throwable.getMessage))
     loggerSuccess should contain theSameElementsAs Seq(1)
     loggerFailure.isEmpty shouldBe true
   }
@@ -47,8 +46,7 @@ class TryOpsSpec extends FunSuite with Matchers {
     val loggerFailure = ArrayBuffer[String]()
     Failure[Int](new Exception("1")).log(
       message => loggerSuccess.append(message),
-      throwable => loggerFailure.append(throwable.getMessage)
-    )
+      throwable => loggerFailure.append(throwable.getMessage))
     loggerSuccess.isEmpty shouldBe true
     loggerFailure should contain theSameElementsAs Seq("1")
   }

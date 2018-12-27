@@ -129,4 +129,24 @@ package object utils {
     result
   }
 
+  /** Convert a Scala Map into a Java Properties instance */
+  def map2Properties[K, V](map: Map[K, V]): java.util.Properties = {
+    val properties = new java.util.Properties()
+    map.foreach { case (k, v) => properties.setProperty(k.toString, v.toString) }
+    properties
+  }
+
+  /** Convert a Scala Map into a Java HashMap instance */
+  def map2HashMap[K, V](map: Map[K, V]): java.util.HashMap[K, V] = {
+    val hashmap = new java.util.HashMap[K, V]()
+    map.foreach { case (k, v) => hashmap.put(k, v) }
+    hashmap
+  }
+
+  /** Decorate Scala Maps with various utility functions */
+  implicit class MapOps[K, V](val map: Map[K, V]) {
+    def asProperties: java.util.Properties = map2Properties(map)
+    def asHashMap: java.util.HashMap[K, V] = map2HashMap(map)
+  }
+
 }

@@ -60,13 +60,15 @@ object MyComplexExample extends Configurator[MyComplexExample] {
 
     import scalaz.syntax.applicative._
 
+    implicit val mySimpleExampleConfigExtractor = MySimpleExample
+
     val separatorChar = config.extract[String]("separatorChar").
       ensure(new BadValue("separatorChar", "should be a single character.").toNel)(t => t.length == 1)
 
     val separatorSize = config.extract[Int]("separatorSize").
       ensure(new IllegalArgumentException("The separatorSize should be between 1 and 80.").toNel)(s => s > 0 && s <= 80)
 
-    MySimpleExample.validationNel(config) |@| separatorChar |@| separatorSize apply MyComplexExample.apply
+    config.extract[MySimpleExample] |@| separatorChar |@| separatorSize apply MyComplexExample.apply
   }
 }
 
@@ -82,14 +84,12 @@ object MyComplexExampleDemo extends App {
       |myExample.overwrite=true
       |myExample.separatorChar="*"
       |myExample.separatorSize=15
-    """.stripMargin
-  )
+    """.stripMargin)
 
   println(
     s"""===============
         | Positive Test
-        |===============""".stripMargin
-  )
+        |===============""".stripMargin)
   // This is the place where the "magic happens" and everything goes well
   // Notice that we extract the exact configuration that we need out of the root configuration object
   // by calling `goodConfig.getConfig("myExample")`
@@ -100,8 +100,7 @@ object MyComplexExampleDemo extends App {
     s"""|
         |===============
         | Negative Test
-        |===============""".stripMargin
-  )
+        |===============""".stripMargin)
   // This is where we see what happens when there are some problems
   val wrongConfig = ConfigFactory.parseString(
     """
@@ -110,8 +109,7 @@ object MyComplexExampleDemo extends App {
       |  separatorChar="--"
       |  separatorSize=81
       |}
-    """.stripMargin
-  )
+    """.stripMargin)
   print(MyComplexExample(wrongConfig.getConfig("myExample")).recover { case (t: Throwable) => t.getMessage }.get)
 }
 
