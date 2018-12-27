@@ -68,14 +68,12 @@ object MySimpleExampleDemo extends App {
     """
       |myExample.path="some_path"
       |myExample.overwrite=true
-    """.stripMargin
-  )
+    """.stripMargin)
 
   println(
     s"""===============
         | Positive Test
-        |===============""".stripMargin
-  )
+        |===============""".stripMargin)
   // This is the place where the "magic happens" and everything goes well
   // Notice that we extract the exact configuration that we need out of the root configuration object
   // by calling `goodConfig.getConfig("myExample")`
@@ -86,14 +84,12 @@ object MySimpleExampleDemo extends App {
     s"""|
         |===============
         | Negative Test
-        |===============""".stripMargin
-  )
+        |===============""".stripMargin)
   // This is where we see what happens when there are some problems
   val wrongConfig = ConfigFactory.parseString(
     """
       |myExample: {}
-    """.stripMargin
-  )
+    """.stripMargin)
   print(MySimpleExample(wrongConfig.getConfig("myExample")).recover { case (t: Throwable) => t.getMessage }.get)
 }
 

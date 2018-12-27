@@ -23,6 +23,10 @@ SOFTWARE.
 */
 package org.tupol.utils
 
+import java.sql.{ Date, Timestamp }
+import java.time.{ Duration, LocalDate, LocalDateTime }
+import java.util
+
 import com.typesafe.config.ConfigException.{ BadValue, Missing }
 import com.typesafe.config.{ Config, ConfigObject }
 import scalaz.syntax.validation._
@@ -36,18 +40,22 @@ package object config {
 
   /**
    * An extractor is a bit of code that knows how to extract a value of type T
-   * from a typesafe {{Config}} instance.
+   * from a Typesafe {{Config}} instance.
    *
    * @tparam T the type that this implementation can extract for us.
    */
   trait Extractor[T] {
 
+    val EmptyPath = "\"\""
     /**
-     * @param config the typesafe Config instance.
+     * Extract an object instance of type `T` from the given config at the given path.
+     * @param config the Typesafe Config instance.
      * @param path the path at which the value resides.
-     * @return the value that was retrieved for us.
+     * @return the value that was retrieved.
      */
     def extract(config: Config, path: String): T
+    def extract(config: Config): T = extract(config.atPath(EmptyPath), EmptyPath)
+
   }
 
   object Extractor {
@@ -55,54 +63,17 @@ package object config {
     @implicitNotFound("No compatible Extractor in scope for type ${T}")
     def apply[T](implicit T: Extractor[T]): Extractor[T] = T
 
+    implicit val anyListExtractor = new Extractor[Seq[Any]] {
+      def extract(config: Config, path: String): Seq[Any] =
+        Seq(config.getAnyRefList(path).asScala: _*)
+    }
+
     implicit val stringExtractor = new Extractor[String] {
       def extract(config: Config, path: String): String = config.getString(path)
     }
 
-    implicit val stringListExtractor = new Extractor[Seq[String]] {
-      def extract(config: Config, path: String): Seq[String] = Seq(config.getStringList(path).asScala: _*)
-    }
-
-    implicit val doubleListExtractor = new Extractor[Seq[Double]] {
-      def extract(config: Config, path: String): Seq[Double] = Seq(config.getDoubleList(path).asScala.map(_.doubleValue): _*)
-    }
-
-    implicit val configListExtractor = new Extractor[Seq[Config]] {
-      def extract(config: Config, path: String): Seq[Config] = Seq(config.getConfigList(path).asScala: _*)
-    }
-
-    implicit val string2stringMapExtractor = new Extractor[Map[String, String]] {
-      def extract(config: Config, path: String): Map[String, String] = string2AnyMapExtractor.extract(config, path).mapValues(_.toString)
-    }
-
-    implicit val string2intMapExtractor = new Extractor[Map[String, Int]] {
-      def extract(config: Config, path: String): Map[String, Int] = string2AnyMapExtractor.extract(config, path).mapValues(_.toString.toInt)
-    }
-
-    implicit val string2longMapExtractor = new Extractor[Map[String, Long]] {
-      def extract(config: Config, path: String): Map[String, Long] = string2AnyMapExtractor.extract(config, path).mapValues(_.toString.toLong)
-    }
-
-    implicit val string2doubleMapExtractor = new Extractor[Map[String, Double]] {
-      def extract(config: Config, path: String): Map[String, Double] = string2AnyMapExtractor.extract(config, path).mapValues(_.toString.toDouble)
-    }
-
-    implicit val string2AnyMapExtractor: Extractor[Map[String, Any]] = new Extractor[Map[String, Any]] {
-      def object2pairs(o: ConfigObject): Seq[(String, Any)] = for {
-        entry <- o.entrySet().asScala.toSeq
-        key = entry.getKey
-        value = entry.getValue.unwrapped()
-      } yield (key, value)
-
-      def list2pairs(os: Seq[ConfigObject]): Seq[(String, Any)] = for {
-        o <- os
-        entry <- o.entrySet().asScala
-        key = entry.getKey
-        value = entry.getValue.unwrapped()
-      } yield (key, value)
-
-      def extract(config: Config, path: String): Map[String, Any] = Try(object2pairs(config.getObject(path)))
-        .getOrElse(list2pairs(config.getObjectList(path).asScala)).toMap
+    implicit val booleanExtractor = new Extractor[Boolean] {
+      def extract(config: Config, path: String): Boolean = config.getBoolean(path)
     }
 
     implicit val characterExtractor = new Extractor[Character] {
@@ -121,8 +92,132 @@ package object config {
       def extract(config: Config, path: String): Double = config.getDouble(path)
     }
 
-    implicit val booleanExtractor = new Extractor[Boolean] {
-      def extract(config: Config, path: String): Boolean = config.getBoolean(path)
+    implicit val durationExtractor = new Extractor[Duration] {
+      def extract(config: Config, path: String): Duration = config.getDuration(path)
+    }
+
+    /** Expected format: <code>yyyy-[m]m-[d]d hh:mm:ss[.f...]</code> */
+    implicit val timestampExtractor = new Extractor[Timestamp] {
+      def extract(config: Config, path: String): Timestamp = Timestamp.valueOf(config.getString(path))
+    }
+
+    /** Expected format: <code>yyyy-[m]m-[d]d</code>*/
+    implicit val dateExtractor = new Extractor[Date] {
+      def extract(config: Config, path: String): Date = Date.valueOf(config.getString(path))
+    }
+
+    implicit val localDateExtractor = new Extractor[LocalDate] {
+      def extract(config: Config, path: String): LocalDate = LocalDate.parse(config.getString(path))
+    }
+
+    implicit val localDateTimeExtractor = new Extractor[LocalDateTime] {
+      def extract(config: Config, path: String): LocalDateTime = LocalDateTime.parse(config.getString(path))
+    }
+
+    implicit val stringListExtractor = new Extractor[Seq[String]] {
+      def extract(config: Config, path: String): Seq[String] =
+        Seq(config.getStringList(path).asScala: _*)
+    }
+
+    implicit val booleanListExtractor = new Extractor[Seq[Boolean]] {
+      def extract(config: Config, path: String): Seq[Boolean] =
+        Seq(config.getBooleanList(path).asScala: _*).map(_.booleanValue())
+    }
+
+    implicit val intListExtractor = new Extractor[Seq[Int]] {
+      def extract(config: Config, path: String): Seq[Int] =
+        Seq(config.getIntList(path).asScala: _*).map(_.intValue())
+    }
+
+    implicit val longListExtractor = new Extractor[Seq[Long]] {
+      def extract(config: Config, path: String): Seq[Long] =
+        Seq(config.getLongList(path).asScala: _*).map(_.longValue())
+    }
+
+    implicit val doubleListExtractor = new Extractor[Seq[Double]] {
+      def extract(config: Config, path: String): Seq[Double] =
+        Seq(config.getDoubleList(path).asScala: _*).map(_.doubleValue)
+    }
+
+    implicit val configListExtractor = new Extractor[Seq[Config]] {
+      def extract(config: Config, path: String): Seq[Config] =
+        Seq(config.getConfigList(path).asScala.map(_.withOnlyPath(path)): _*)
+    }
+
+    /**
+     * Extract a list of composite types for every T that there is an extractor defined for
+     * @param extractor an implicit Extractor[T] that needs to be in scope
+     * @tparam T the extracted value
+     * @return A Seq(T) if we can extract a valid property of the given type or throw an Exception
+     */
+    implicit def listExtractor[T](implicit extractor: Extractor[T]): Extractor[Seq[T]] = new Extractor[Seq[T]] {
+      override def extract(config: Config, path: String): Seq[T] = {
+        def fromObjects: Seq[T] = Seq(config.getObjectList(path).asScala: _*)
+          .map(co => extractor.extract(co.toConfig.atPath(path), path))
+        def fromConfigs: Seq[T] = Seq(config.getConfigList(path).asScala: _*)
+          .map(co => extractor.extract(co.atPath(path), path))
+        def fromList: Seq[T] = Seq(config.getList(path).asScala: _*)
+          .map(co => extractor.extract(co.atPath(path), path))
+        (Try(fromList) orElse Try(fromConfigs) orElse Try(fromObjects)).get
+      }
+    }
+
+    implicit val anyMapExtractor = new Extractor[Map[String, Any]] {
+      def extract(config: Config, path: String): Map[String, Any] = {
+        def fromObject(o: ConfigObject): Set[(String, Any)] = Set(config.getObject(path).entrySet.asScala
+          .map(e => (e.getKey, e.getValue.unwrapped.asInstanceOf[Any])).toSeq: _*)
+        def fromObjects: Seq[(String, Any)] = (config.getObjectList(path).asScala).flatMap(fromObject(_))
+        def fromList: Seq[(String, Any)] = Seq(config.getList(path).asScala: _*).flatMap { co =>
+          val kv = co.unwrapped.asInstanceOf[util.HashMap[_, _]].asScala.toSeq
+          kv.map { case (k, v) => (k.toString, v.asInstanceOf[Any]) }
+        }
+        (Try(fromList) orElse Try(fromObject(config.getObject(path))) orElse Try(fromObjects)).get.toMap
+      }
+    }
+
+    implicit val stringMapExtractor = new Extractor[Map[String, String]] {
+      def extract(config: Config, path: String): Map[String, String] =
+        anyMapExtractor.extract(config, path).mapValues(_.toString)
+    }
+
+    implicit val booleanMapExtractor = new Extractor[Map[String, Boolean]] {
+      def extract(config: Config, path: String): Map[String, Boolean] =
+        stringMapExtractor.extract(config, path).mapValues(_.toBoolean)
+    }
+
+    implicit val intMapExtractor = new Extractor[Map[String, Int]] {
+      def extract(config: Config, path: String): Map[String, Int] =
+        stringMapExtractor.extract(config, path).mapValues(_.toInt)
+    }
+
+    implicit val longMapExtractor = new Extractor[Map[String, Long]] {
+      def extract(config: Config, path: String): Map[String, Long] =
+        stringMapExtractor.extract(config, path).mapValues(_.toLong)
+    }
+
+    implicit val doubleMapExtractor = new Extractor[Map[String, Double]] {
+      def extract(config: Config, path: String): Map[String, Double] =
+        stringMapExtractor.extract(config, path).mapValues(_.toDouble)
+    }
+
+    /**
+     * Extract a Map with String keys and composite value types for every T that there is an extractor defined for
+     * @param extractor an implicit Extractor[T] that needs to be in scope
+     * @tparam T the extracted value
+     * @return A Seq(T) if we can extract a valid property of the given type or throw an Exception
+     */
+    implicit def mapExtractor[T](implicit extractor: Extractor[T]): Extractor[Map[String, T]] = new Extractor[Map[String, T]] {
+      def extract(config: Config, path: String): Map[String, T] = {
+        def fromObject(o: ConfigObject): Set[(String, T)] =
+          Set(config.getObject(path).entrySet.asScala.map(e => (e.getKey, extractor.extract(e.getValue.atPath(e.getKey), e.getKey))).toSeq: _*)
+        def fromObjects: Seq[(String, T)] = (config.getObjectList(path).asScala).flatMap(fromObject(_))
+        def fromList: Seq[(String, T)] = Seq(config.getList(path).asScala: _*).flatMap { co =>
+          val kv = co.unwrapped.asInstanceOf[util.HashMap[_, _]].asScala
+          val keys = kv.keys.map(_.toString)
+          keys.map(key => (key, extractor.extract(co.atPath(key), key)))
+        }
+        (Try(fromList) orElse Try(fromObject(config.getObject(path))) orElse Try(fromObjects)).get.toMap
+      }
     }
 
     implicit val rangeExtractor = new Extractor[Range] {
@@ -156,7 +251,7 @@ package object config {
     }
 
     /**
-     * Allows us to extract an Option[T] for every T that we've defined an extractor for.
+     * Extract an Option[T] for every T that we've defined an extractor for.
      *
      * @param extractor an implicit Extractor[T] that needs to be in scope
      * @tparam T the extracted value
@@ -168,19 +263,39 @@ package object config {
         case Failure(_) => None
       }
     }
+
+    /**
+     * Extract an Either[A, B] for every A or B that we've defined an extractor for.
+     *
+     * @param leftExtractor an implicit Extractor[T] that needs to be in scope
+     * @param rightExtractor an implicit Extractor[T] that needs to be in scope
+     * @tparam A the extracted Left value
+     * @tparam B the extracted Right value
+     * @return A Left(A) if we could extract the A type, or a Right(B) if we could extract the right type or throw an Exception
+     */
+    implicit def eitherExtractor[A, B](implicit leftExtractor: Extractor[A], rightExtractor: Extractor[B]): Extractor[Either[A, B]] = new Extractor[Either[A, B]] {
+      override def extract(config: Config, path: String): Either[A, B] =
+        (
+          Try(leftExtractor.extract(config, path)).map(Left(_))
+          orElse
+          Try(rightExtractor.extract(config, path)).map(Right(_))).get
+    }
+
   }
 
   /**
-   * Adds the extract method to a typesafe Config instance, allowing us to request values from it like so:
+   * Adds the extract method to a Typesafe Config instance, allowing us to request values from it like so:
    * {{config.extract[Double]("double")}} or {{config.extract[Option[Range]]("range")}}
    *
-   * @param config the typesafe Config instance to operate on.
+   * @param config the Typesafe Config instance to operate on.
    */
   implicit class RichConfig(config: Config) {
-    def extract[T: Extractor](path: String): ValidationNel[Throwable, T] = Try(Extractor[T].extract(config, path)) match {
+    private def tryExtraction[T](extract: => T): ValidationNel[Throwable, T] = Try(extract) match {
       case Success(value) => value.success
       case Failure(exception: Throwable) => exception.failureNel
     }
+    def extract[T: Extractor](path: String): ValidationNel[Throwable, T] = tryExtraction(Extractor[T].extract(config, path))
+    def extract[T: Extractor]: ValidationNel[Throwable, T] = tryExtraction(Extractor[T].extract(config))
     def validatePath(path: String): ValidationNel[Throwable, String] =
       if (config.hasPath(path)) path.successNel
       else (new Missing(path): Throwable).failureNel
@@ -206,7 +321,7 @@ package object config {
 
   /**
    * Encapsulates all configuration exceptions that occurred while trying to map
-   * the data from a typesafe Config object onto a case class.
+   * the data from a Typesafe Config object onto a case class.
    */
   case class ConfigurationException(errors: Seq[Throwable]) extends Exception {
     override def getMessage: String =
@@ -217,11 +332,12 @@ package object config {
   }
 
   /**
-   * Implementors of this trait how to construct a class of type T from a typesafe Config instance.
+   * Implementors of this trait how to construct a class of type T from a Typesafe Config instance.
    * @tparam T, the type of class this Configurator knows how to validate/construct.
    */
-  trait Configurator[T] {
+  trait Configurator[T] extends Extractor[T] {
     def validationNel(config: Config): ValidationNel[Throwable, T]
     def apply(config: Config): Try[T] = validationNel(config)
+    override def extract(config: Config, path: String): T = apply(config.getConfig(path)).get
   }
 }

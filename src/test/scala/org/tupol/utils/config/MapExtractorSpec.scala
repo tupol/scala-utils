@@ -1,60 +1,25 @@
 package org.tupol.utils.config
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{ Config, ConfigFactory }
 import org.scalatest.{ FunSuite, Matchers }
 import scalaz.syntax.applicative._
+import scalaz.{ ValidationNel, Failure => ZFailure }
 
-import scala.collection.JavaConversions._
-import scala.util.{ Success, Try }
-
-class ExtractorSpec extends FunSuite with Matchers {
+class MapExtractorSpec extends FunSuite with Matchers {
 
   case class ComplexExample(char: Character, str: String, bool: Boolean, dbl: Double, in: Int, lng: Long,
     optChar: Option[Character], optStr: Option[String], optBool: Option[Boolean],
     optDouble: Option[Double], optInt: Option[Int], optLong: Option[Long])
 
-  test("Missing optional values should not result in error") {
-    val complexInstance = ComplexExample('*', "string", false, 0.9d, 23, 12L, None, None, None, None, None, None)
-    val config = ConfigFactory.parseMap(Map("char" -> "*", "str" -> "string", "bool" -> "false", "dbl" -> "0.9", "in" -> "23", "lng" -> "12"))
-    val validationResult: Try[ComplexExample] =
-      config.extract[Character]("char") |@| config.extract[String]("str") |@|
-        config.extract[Boolean]("bool") |@| config.extract[Double]("dbl") |@|
-        config.extract[Int]("in") |@| config.extract[Long]("lng") |@|
-        config.extract[Option[Character]]("optchar") |@| config.extract[Option[String]]("optstr") |@|
-        config.extract[Option[Boolean]]("optbool") |@| config.extract[Option[Double]]("optdbl") |@|
-        config.extract[Option[Int]]("optin") |@| config.extract[Option[Long]]("optlng") apply ComplexExample.apply
-
-    validationResult shouldEqual Success(complexInstance)
-  }
-
-  test("Optional values should be parsed when present") {
-    val complexInstance = ComplexExample('*', "string", false, 0.9d, 23, 12L, Some('*'), Some("string"), Some(false), Some(0.9d), Some(23), Some(12l))
-    val config = ConfigFactory.parseMap(Map("char" -> "*", "str" -> "string", "bool" -> "false", "dbl" -> "0.9", "in" -> "23", "lng" -> "12",
-      "optchar" -> "*", "optstr" -> "string", "optbool" -> "false", "optdbl" -> "0.9", "optin" -> "23", "optlng" -> "12"))
-    val validationResult: Try[ComplexExample] = config.extract[Character]("char") |@| config.extract[String]("str") |@| config.extract[Boolean]("bool") |@| config.extract[Double]("dbl") |@|
-      config.extract[Int]("in") |@| config.extract[Long]("lng") |@| config.extract[Option[Character]]("optchar") |@| config.extract[Option[String]]("optstr") |@|
-      config.extract[Option[Boolean]]("optbool") |@| config.extract[Option[Double]]("optdbl") |@| config.extract[Option[Int]]("optin") |@| config.extract[Option[Long]]("optlng") apply ComplexExample.apply
-
-    validationResult shouldEqual Success(complexInstance)
-  }
-
-  case class SimpleExample(char: Character, bool: Boolean, in: Int)
-
-  test("Missing non optional values should result in a Failure") {
-    val config = ConfigFactory.parseMap(Map("char" -> "*", "in" -> "23"))
-    val validationResult: Try[SimpleExample] = config.extract[Character]("char") |@| config.extract[Boolean]("bool") |@| config.extract[Int]("in") apply SimpleExample.apply
-
-    validationResult.failed.map(_.getMessage).get should include("No configuration setting found for key 'bool'")
-  }
-
-  test("Non optional values of the wrong type should result in a Failure") {
-    val config = ConfigFactory.parseMap(Map("char" -> "*", "bool" -> "nee", "in" -> "234,34"))
-    val validationResult: Try[SimpleExample] = config.extract[Character]("char") |@| config.extract[Boolean]("bool") |@| config.extract[Int]("in") apply SimpleExample.apply
-    validationResult.failed.map(_.getMessage).get should include("hardcoded value: bool has type STRING rather than BOOLEAN")
-    validationResult.failed.map(_.getMessage).get should include("hardcoded value: in has type STRING rather than NUMBER")
+  case class CustomConf(prop1: Int, prop2: Seq[Long])
+  object CustomConf extends Configurator[CustomConf] {
+    override def validationNel(config: Config): ValidationNel[Throwable, CustomConf] = {
+      config.extract[Int]("prop1") |@| config.extract[Seq[Long]]("prop2") apply CustomConf.apply
+    }
   }
 
   test("Map[String, String] should be parsed from an object") {
+
     val config = ConfigFactory.parseString("""
       |property {
       |   key1 : 600
@@ -90,6 +55,7 @@ class ExtractorSpec extends FunSuite with Matchers {
       |]
     """.stripMargin)
     val actual: Map[String, String] = config.extract[Map[String, String]]("property").get
+
     actual shouldEqual Map("key1" -> "600", "key2" -> "100")
   }
 
@@ -287,6 +253,31 @@ class ExtractorSpec extends FunSuite with Matchers {
                                            """.stripMargin)
     val actual: Map[String, Long] = config.extract[Map[String, Long]]("property").get
     actual shouldEqual Map()
+  }
+
+  test("Map[String, CustomConf] should be successfully parsed from an object") {
+    implicit val customConfExtractor = CustomConf
+    val config = ConfigFactory.parseString("""
+                                             |customs {
+                                             |   c1: {prop1 : 1, prop2: [11, 12]}
+                                             |   c2: {prop1 : 2, prop2: [21, 22]}
+                                             |}
+                                           """.stripMargin)
+    val actual = config.extract[Map[String, CustomConf]]("customs").get
+    val expected = Map("c1" -> CustomConf(1, Seq(11, 12)), "c2" -> CustomConf(2, Seq(21, 22)))
+    actual should contain theSameElementsAs (expected)
+  }
+
+  test("Map[String, CustomConf] should fail parsing if any of the configurations are wrong") {
+    implicit val customConfExtractor = CustomConf
+    val config = ConfigFactory.parseString("""
+                                             |customs {
+                                             |   c1: {prop1 : 1, prop2: [11, 12]}
+                                             |   c2: {prop1 : 2, prop2: [21, xx]}
+                                             |}
+                                           """.stripMargin)
+    val actual = config.extract[Map[String, CustomConf]]("customs")
+    actual shouldBe a[ZFailure[_]]
   }
 
 }
