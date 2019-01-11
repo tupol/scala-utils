@@ -1,8 +1,10 @@
 # Publishing the Project to Sonatype
 
-`sbt publishSigned`
+`sbt +publishSigned`
 
-`sbt publishLocalSigned`
+`sbt +publishLocalSigned`
+
+`sbt release`
 
 ## External References
 

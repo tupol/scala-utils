@@ -22,12 +22,12 @@ Scala Utils is published to Sonatype OSS and Maven Central:
 
 - Group id / organization: `org.tupol`
 - Artifact id / name: `scala-utils`
-- Latest version is `0.2.0-SNAPSHOT`
+- Latest version is `0.2.0`
 
 Usage with SBT, adding a dependency to the latest version of Scala Logging to your sbt build definition file:
 
 ```scala
-libraryDependencies += "org.tupol" %% "scala-utils" % "0.2.0-SNAPSHOT"
+libraryDependencies += "org.tupol" %% "scala-utils" % "0.2.0"
 ```
 
 
@@ -38,7 +38,7 @@ Some usage examples can be found under [`src/test/scala/examples`](src/test/scal
 
 ## What's new?
 
-**0.2.0-SNAPSHOT**
+**0.2.0**
   - `Configurator`s can also be used as `Extractor`s
   - Added support for complex `Map` and `Seq` configuration types
   - Added extractor for `Either` objects
