@@ -58,7 +58,7 @@ pomIncludeRepository := { x => false }
 
 licenses := Seq("MIT-style" -> url("https://opensource.org/licenses/MIT"))
 
-homepage := Some(url("https://github.com/tupol"))
+homepage := Some(url("https://github.com/tupol/scala-utils"))
 
 scmInfo := Some(
   ScmInfo(
@@ -74,6 +74,24 @@ developers := List(
     email = "olivertupran@yahoo.com",
     url   = url("https://github.com/tupol")
   )
+)
+
+import ReleaseTransformations._
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,              // : ReleaseStep
+  inquireVersions,                        // : ReleaseStep
+  runClean,                               // : ReleaseStep
+  runTest,                                // : ReleaseStep
+  setReleaseVersion,                      // : ReleaseStep
+  commitReleaseVersion,                   // : ReleaseStep, performs the initial git checks
+  tagRelease,                             // : ReleaseStep
+  publishArtifacts,                       // : ReleaseStep, checks whether `publishTo` is properly set up
+  ReleaseStep(action = Command.process(s"""sonatypeOpen "${organization.value}" "${name.value} v${version.value}"""", _)),
+  ReleaseStep(action = Command.process("publishSigned", _)),
+  ReleaseStep(action = Command.process("sonatypeRelease", _)),
+  setNextVersion,                         // : ReleaseStep
+  commitNextVersion,                      // : ReleaseStep
+  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
 )
 
 // ------------------------------
