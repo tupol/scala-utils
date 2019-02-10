@@ -18,17 +18,8 @@ The main utilities available:
 
 ## Getting Scala Utils ##
 
-Scala Utils is published to Sonatype OSS and Maven Central:
-
-- Group id / organization: `org.tupol`
-- Artifact id / name: `scala-utils`
-- Latest version is `0.2.0`
-
-Usage with SBT, adding a dependency to the latest version of Scala Logging to your sbt build definition file:
-
-```scala
-libraryDependencies += "org.tupol" %% "scala-utils" % "0.2.0"
-```
+Scala Utils is published to Sonatype OSS and [Maven Central](https://mvnrepository.com/artifact/org.tupol/scala-utils),
+where the latest artifacts can be found.
 
 
 ## Usage
