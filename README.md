@@ -1,5 +1,12 @@
 # Scala Utils
 
+[![Maven Central](https://img.shields.io/maven-central/v/org.tupol/scala-utils_2.11.svg)](https://mvnrepository.com/artifact/org.tupol/scala-utils) &nbsp;
+[![GitHub](https://img.shields.io/github/license/tupol/scala-utils.svg)](https://github.com/tupol/scala-utils/blob/master/LICENSE) &nbsp; 
+[![Travis (.org)](https://img.shields.io/travis/tupol/scala-utils.svg)](https://travis-ci.com/tupol/scala-utils) &nbsp; 
+[![Codecov](https://img.shields.io/codecov/c/github/tupol/scala-utils.svg)](https://codecov.io/gh/tupol/scala-utils) &nbsp;
+[![Gitter](https://badges.gitter.im/scala-utils/community.svg)](https://gitter.im/scala-utils/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) &nbsp; 
+
+
 ## Description
 
 This project contains some basic utilities that can help setting up a Scala project.
