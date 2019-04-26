@@ -1,5 +1,7 @@
 # Scala Utils
 
+[![Join the chat at https://gitter.im/scala-utils/community](https://badges.gitter.im/scala-utils/community.svg)](https://gitter.im/scala-utils/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Description
 
 This project contains some basic utilities that can help setting up a Scala project.
