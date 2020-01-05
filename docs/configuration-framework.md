@@ -1,5 +1,12 @@
 # Configuration Framework
 
+## Deprecated
+
+***Attention!***
+
+The *Configuration framework* is deprecated, as the
+[PureConfig](https://pureconfig.github.io/) framework is much more mature and provides a better
+overall solution.
 
 ## Scope 
 

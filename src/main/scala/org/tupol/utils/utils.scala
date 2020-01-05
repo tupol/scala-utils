@@ -27,6 +27,12 @@ import scala.util.{ Failure, Success, Try }
 
 /**
  * A few common functions that might be useful.
+ *
+ * For `Try`
+ * - `log`, `logFailure` and `logSuccess`
+ * - `tryWithCloseable`
+ * For a sequence of `Try`
+ * - `allOrOrFail` and `separate`
  */
 package object utils {
 
@@ -87,30 +93,63 @@ package object utils {
       }
       attempt
     }
+
+    /**
+     * Wraps a throwable into another throwable. Useful to wrap or change Exceptions.
+     * @param map
+     * @return
+     */
+    def mapFailure(map: Throwable => Throwable): Try[T] = attempt match {
+      case Success(s) => attempt
+      case Failure(t) => Failure(map(t))
+    }
   }
 
   /**
    * Flatten a sequence of Trys to a try of sequence, which is a failure if any if the Trys is a failure.
-   * @param seqOfTry
+   * @param attempts
    * @tparam T
    * @return
    */
-  def allOkOrFail[T](seqOfTry: Seq[Try[T]]): Try[Seq[T]] =
-    seqOfTry.foldLeft(Try(Seq[T]())) { (acc, tryField) => tryField.flatMap(tf => acc.map(tf +: _)) }
+  def allOkOrFail[T](attempts: Traversable[Try[T]]): Try[Traversable[T]] =
+    attempts.foldLeft(Try(Seq[T]())) { (acc, tryField) => tryField.flatMap(tf => acc.map(tf +: _)) }
+
+  /**
+   * Separate the failures from the successes from a sequnce of `Try`s
+   * @param attempts
+   * @tparam T
+   * @return
+   */
+  def separate[T](attempts: Traversable[Try[T]]): (Traversable[Throwable], Traversable[T]) = {
+    def loop(attempts: Traversable[Try[T]], tx: Seq[Throwable], sx: Seq[T]): (Seq[Throwable], Seq[T]) =
+      attempts match {
+        case Nil => (tx, sx)
+        case Success(s) :: rest => loop(rest, tx, s +: sx)
+        case Failure(t) :: rest => loop(rest, t +: tx, sx)
+      }
+    val (tx, sx) = loop(attempts, Nil, Nil)
+    (tx.reverse, sx.reverse)
+  }
 
   /**
    * Simple decorator for the scala Try, which adds the following simple functions:
-   * @param seqOfTry
+   * @param attempts
    * @tparam T
    */
-  implicit class SeqTryOps[T](val seqOfTry: Seq[Try[T]]) extends AnyVal {
+  implicit class TraversableTryOps[T](val attempts: Traversable[Try[T]]) extends AnyVal {
 
     /**
      * Flatten a sequence of Trys to a try of sequence, which is a failure if any of the Trys is a failure.
      * @return
      */
-    def allOkOrFail: Try[Seq[T]] = utils.allOkOrFail(seqOfTry)
+    def allOkOrFail: Try[Traversable[T]] = utils.allOkOrFail(attempts)
 
+    /**
+     * Separate the failures from the successes from a sequnce of `Try`s
+     * @return
+     */
+    def separate: (Traversable[Throwable], Traversable[T]) =
+      utils.separate(attempts)
   }
 
   /**

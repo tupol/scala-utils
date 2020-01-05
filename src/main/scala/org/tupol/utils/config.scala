@@ -36,6 +36,13 @@ import scala.annotation.implicitNotFound
 import scala.collection.JavaConverters._
 import scala.util.{ Failure, Success, Try }
 
+/**
+ * This package holds a framework for extracting configuration objects out of configuration files, using the
+ * Typesafe Config library.
+ *
+ * This framework deprecated, as the PureConfig [[https://pureconfig.github.io]] framework is much more mature
+ * and provides a better overall solution.
+ */
 package object config {
 
   /**
@@ -289,6 +296,7 @@ package object config {
    *
    * @param config the Typesafe Config instance to operate on.
    */
+  @deprecated("Recommend using pureconfig.io")
   implicit class RichConfig(config: Config) {
     private def tryExtraction[T](extract: => T): ValidationNel[Throwable, T] = Try(extract) match {
       case Success(value) => value.success
@@ -335,6 +343,7 @@ package object config {
    * Implementors of this trait how to construct a class of type T from a Typesafe Config instance.
    * @tparam T, the type of class this Configurator knows how to validate/construct.
    */
+  @deprecated("Recommend using pureconfig.io")
   trait Configurator[T] extends Extractor[T] {
     def validationNel(config: Config): ValidationNel[Throwable, T]
     def apply(config: Config): Try[T] = validationNel(config)

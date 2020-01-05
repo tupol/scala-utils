@@ -1,9 +1,10 @@
 package org.tupol.utils
 
-import org.scalatest.{ FunSuite, Matchers }
+import com.sun.org.apache.bcel.internal.classfile.CodeException
+import org.scalatest.{FunSuite, Matchers}
 
 import scala.collection.mutable.ArrayBuffer
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 class TryOpsSpec extends FunSuite with Matchers {
 
@@ -51,6 +52,19 @@ class TryOpsSpec extends FunSuite with Matchers {
     loggerFailure should contain theSameElementsAs Seq("1")
   }
 
+  test("Success.mapFailure") {
+    class CodeException extends Exception("")
+    def exceptionWrapper(t: Throwable) = new CodeException
+    Success(1).mapFailure(exceptionWrapper) shouldBe Success(1)
+  }
+
+  test("Failure.mapFailure") {
+    class CodeException extends Exception("")
+    val exception = new CodeException
+    def exceptionWrapper(t: Throwable) = exception
+    Failure(new Exception("")).mapFailure(exceptionWrapper) shouldBe Failure(exception)
+  }
+
   test("allOkOrFail yields a Success for a list of a single element") {
     val result = Seq(Success(1)).allOkOrFail
     result shouldBe a[Success[_]]
@@ -72,6 +86,29 @@ class TryOpsSpec extends FunSuite with Matchers {
   test("allOkOrFail yields a Failure") {
     val result = Seq(Success(1), Failure[Int](new Exception("ex"))).allOkOrFail
     result shouldBe a[Failure[_]]
+  }
+
+  test("separate an empty list yields a tuple of empty lists") {
+    Seq().separate shouldBe (Nil, Nil)
+  }
+
+  test("separate successes yield an empty list of failures and a list of successes") {
+    val result = Seq(Success(1)).separate
+    result shouldBe (Nil, Seq(1))
+  }
+
+  test("separate failures yield a list of failures and an empty list of successes") {
+    val ex1 = new Exception("ex1")
+    val ex2 = new Exception("ex2")
+    val result = Seq(Failure(ex1), Failure(ex2)).separate
+    result shouldBe (Seq(ex1, ex2), Nil)
+  }
+
+  test("separate attempts yield a list of failures and a list of successes") {
+    val ex1 = new Exception("ex1")
+    val ex2 = new Exception("ex2")
+    val result = Seq(Success(1), Failure(ex1), Success(2), Failure(ex2)).separate
+    result shouldBe (Seq(ex1, ex2), Seq(1, 2))
   }
 
   test("tryWithCloseable should be successful if everything goes well and the resource should be closed") {

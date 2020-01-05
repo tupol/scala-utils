@@ -8,16 +8,18 @@
 [![Gitter](https://badges.gitter.im/scala-utils/community.svg)](https://gitter.im/scala-utils/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) &nbsp; 
 [![Twitter](https://img.shields.io/twitter/url/https/_tupol.svg?color=%2317A2F2)](https://twitter.com/_tupol) &nbsp; 
 
-
 ## Description
 
 This project contains some basic utilities that can help setting up a Scala project.
 
 The main utilities available:
 - [Configuration framework](docs/configuration-framework.md)
-- Other utilities available in the [`byteable`](src/main/scala/org/tupol/utils/byteable.scala) and
-[`utils`](src/main/scala/org/tupol/utils/utils.scala) packages
+- Convertion to byte array in the [`byteable`](src/main/scala/org/tupol/utils/byteable.scala) package.
+- `Try` utilities in the [`utils`](src/main/scala/org/tupol/utils/utils.scala) package.
 
+***Attention!*** The [Configuration framework](docs/configuration-framework.md) is deprecated, as the
+[PureConfig](https://pureconfig.github.io/) framework is much more mature and provides a better
+overall solution.
 
 ## Prerequisites ##
 
@@ -30,6 +32,12 @@ The main utilities available:
 Scala Utils is published to Sonatype OSS and [Maven Central](https://mvnrepository.com/artifact/org.tupol/scala-utils),
 where the latest artifacts can be found.
 
+Usage with SBT, adding a dependency to the latest version of scala utils to your sbt build definition file:
+
+```scala
+libraryDependencies += "org.tupol" %% "scala-utils" % "0.2.0"
+```
+
 
 ## Usage
 
@@ -38,16 +46,13 @@ Some usage examples can be found under [`src/test/scala/examples`](src/test/scal
 
 ## What's new?
 
-**0.2.0**
-  - `Configurator`s can also be used as `Extractor`s
-  - Added support for complex `Map` and `Seq` configuration types
-  - Added extractor for `Either` objects
-  - Added extractors for time related properties: `Duration`, `Timestamp`, `Date`, `LocalDateTime` and `LocalDate`
+**0.2.1-SNAPSHOT**
+  - Deprecated the `configuration` framework in favour of `pureconfig`
+  - Added `Try.mapFailure` for exception wrapping or conversion
+  - Added `Traversable[Try[_]].separate` function to split failures from successes
 
-**0.1.0**
-  - [`Configurator`](docs/configuration-framework.md)s framework
-  - [`byteable`](src/main/scala/org/tupol/utils/byteable.scala) to convert various data types into array of bytes
-  - [`utils`](src/main/scala/org/tupol/utils/utils.scala) with various utilities for `Map`s, `Product`s and `Try`s
+
+For previous versions please consult the [release notes](RELEASE-NOTES.md).
 
 
 ## Credits & Thanks ##
