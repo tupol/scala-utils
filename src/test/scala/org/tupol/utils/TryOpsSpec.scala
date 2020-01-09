@@ -1,10 +1,10 @@
 package org.tupol.utils
 
 import com.sun.org.apache.bcel.internal.classfile.CodeException
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.{ FunSuite, Matchers }
 
 import scala.collection.mutable.ArrayBuffer
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 class TryOpsSpec extends FunSuite with Matchers {
 
