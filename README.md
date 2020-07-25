@@ -1,10 +1,10 @@
 # Scala Utils
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.tupol/scala-utils_2.11.svg)](https://mvnrepository.com/artifact/org.tupol/scala-utils) &nbsp;
+[![Maven Central](https://img.shields.io/maven-central/v/org.tupol/scala-utils_2.12.svg)](https://mvnrepository.com/artifact/org.tupol/scala-utils) &nbsp;
 [![GitHub](https://img.shields.io/github/license/tupol/scala-utils.svg)](https://github.com/tupol/scala-utils/blob/master/LICENSE) &nbsp; 
 [![Travis (.org)](https://img.shields.io/travis/tupol/scala-utils.svg)](https://travis-ci.com/tupol/scala-utils) &nbsp; 
 [![Codecov](https://img.shields.io/codecov/c/github/tupol/scala-utils.svg)](https://codecov.io/gh/tupol/scala-utils) &nbsp;
-[![Javadocs](https://www.javadoc.io/badge/org.tupol/scala-utils_2.11.svg)](https://www.javadoc.io/doc/org.tupol/scala-utils_2.11)
+[![Javadocs](https://www.javadoc.io/badge/org.tupol/scala-utils_2.12.svg)](https://www.javadoc.io/doc/org.tupol/scala-utils_2.12)
 [![Gitter](https://badges.gitter.im/scala-utils/community.svg)](https://gitter.im/scala-utils/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) &nbsp; 
 [![Twitter](https://img.shields.io/twitter/url/https/_tupol.svg?color=%2317A2F2)](https://twitter.com/_tupol) &nbsp; 
 
@@ -63,8 +63,9 @@ More core utilities were added and the old ones were brushed up for better consi
 Attention! This version is no longer cross compiling across Scala 2.11 and 2.12.
 Only Scala 2.12 is supported at the moment.
 
-The previous versions are still available and can evolve independently on the [`0.2.x`](https://github.com/tupol/scala-utils/tree/0.2.x) branch.
+The previous versions are still available and can evolve independently on the **[`0.2.x`](https://github.com/tupol/scala-utils/tree/0.2.x)** branch.
 
+For previous versions please consult the [release notes](RELEASE-NOTES.md).
 
 
 ## License ##
