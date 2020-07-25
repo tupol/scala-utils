@@ -13,18 +13,18 @@
 This project contains some basic utilities that can help setting up a Scala project.
 
 The main utilities available:
-- [Configuration framework](docs/configuration-framework.md)
-- Convertion to byte array in the [`byteable`](src/main/scala/org/tupol/utils/byteable.scala) package.
-- `Try` utilities in the [`utils`](src/main/scala/org/tupol/utils/utils.scala) package.
+- [Configuration framework](config-z/docs/configuration-framework.md)
+- Conversion to byte array in the [`byteable`](core/src/main/scala/org/tupol/utils/ByteableOps.scala) package.
+- `Try`, `Future`, `Either`, `Product`, `Map` and other utilities in the [`utils`](core/src/main/scala/org/tupol/utils/) package.
 
-***Attention!*** The [Configuration framework](docs/configuration-framework.md) is deprecated, as the
-[PureConfig](https://pureconfig.github.io/) framework is much more mature and provides a better
-overall solution.
+***Attention!*** The [Configuration framework](config-z/docs/configuration-framework.md) might be
+ deprecated, as the [PureConfig](https://pureconfig.github.io/) framework is much more mature and
+  provides a better overall solution.
 
 ## Prerequisites ##
 
-* Java 6 or higher
-* Scala 2.11,or 2.12
+* Java 8 or higher (matching the Scala version)
+* Scala 2.12
 
 
 ## Getting Scala Utils ##
@@ -35,29 +35,36 @@ where the latest artifacts can be found.
 Usage with SBT, adding a dependency to the latest version of scala utils to your sbt build definition file:
 
 ```scala
-libraryDependencies += "org.tupol" %% "scala-utils" % "0.2.0"
+  libraryDependencies += "org.tupol" %% "scala-utils" % "1.0.0-RC01-SNAPSHOT"
+```
+
+The Sonatype snapshots repo needs to be added as well:
+
+```scala
+  resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 ```
 
 
 ## Usage
 
-Some usage examples can be found under [`src/test/scala/examples`](src/test/scala/examples).
+Some `config-z` usage examples can be found under [`config-z/src/test/scala/examples`](config-z/src/test/scala/examples).
 
 
 ## What's new?
 
-**0.2.1-SNAPSHOT**
-  - Deprecated the `configuration` framework in favour of `pureconfig`
-  - Added `Try.mapFailure` for exception wrapping or conversion
-  - Added `Traversable[Try[_]].separate` function to split failures from successes
+**1.0.0-RC01** Effort Started
 
+This new major version aims to bring a new and hopefully cleaner project structure.
+The `scalaz` based configuration is moved to a different module to isolate better from the core.
+In the future a `cats` based version will be added as well.
 
-For previous versions please consult the [release notes](RELEASE-NOTES.md).
+More core utilities were added and the old ones were brushed up for better consistency and clarity.
 
+Attention! This version is no longer cross compiling across Scala 2.11 and 2.12.
+Only Scala 2.12 is supported at the moment.
 
-## Credits & Thanks ##
+The previous versions are still available and can evolve independently on the [`0.2.x`](https://github.com/tupol/scala-utils/tree/0.2.x) branch.
 
-- [Daan Hoogenboezem](https://github.com/daanhoogenboezem) For sketching the initial configuration framework.
 
 
 ## License ##
