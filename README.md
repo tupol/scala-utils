@@ -35,10 +35,14 @@ where the latest artifacts can be found.
 Usage with SBT, adding a dependency to the latest version of scala utils to your sbt build definition file:
 
 ```scala
-  libraryDependencies += "org.tupol" %% "scala-utils" % "1.0.0-RC01"
+  libraryDependencies += "org.tupol" %% "scala-utils-core" % "1.0.0-RC01"
+```
+or
+```scala
+  libraryDependencies += "org.tupol" %% "scala-utils-core" % "1.0.0-RC01"
 ```
 
-The Sonatype snapshots repo needs to be added as well:
+For Snapshots, the Sonatype snapshots repo needs to be added as well:
 
 ```scala
   resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"

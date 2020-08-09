@@ -6,14 +6,14 @@ class UtilsSpec extends FunSuite with Matchers {
 
   test("timeCode should return the approximate length of the computation in millis") {
 
-    val expectedResult   = 10
-    val expectedDuration = 200
+    val expectedResultMillis   = 10
+    val expectedDurationMillis = 200
     val (result, duration) = timeCode {
-      Thread.sleep(expectedDuration);
+      Thread.sleep(expectedDurationMillis);
       10
     }
-    result shouldBe expectedResult
-    Math.abs(duration - expectedDuration) / expectedDuration < 0.1 shouldBe true
+    result shouldBe expectedResultMillis
+    Math.abs(duration.toMillis - expectedDurationMillis) / expectedDurationMillis < 0.1 shouldBe true
   }
 
 }
