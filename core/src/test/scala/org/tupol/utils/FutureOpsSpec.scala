@@ -6,7 +6,6 @@ import org.tupol.utils.FutureOps.TraversableFuturesOps
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
-import scala.util.{ Failure, Success, Try }
 
 class FutureOpsSpec extends FunSuite with Matchers with ScalaFutures {
 
