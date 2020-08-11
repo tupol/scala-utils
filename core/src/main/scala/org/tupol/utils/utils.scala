@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package org.tupol
 
-import scala.concurrent.duration.{FiniteDuration, _}
+import scala.concurrent.duration.{ FiniteDuration, _ }
 
 /** A few common functions that might be useful. */
 package object utils {
