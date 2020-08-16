@@ -1,6 +1,6 @@
 # Release Notes
 
-## 1.0.0-RC02-SNAPSHOT
+## 1.0.0-RC02
 
 - Minor project refactoring and cleanup
 - Added `Future.allOkOrFail`
