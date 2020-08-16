@@ -1,15 +1,11 @@
 package org.tupol.utils.configz
 
-import java.sql.Timestamp
-
-import com.typesafe.config.{ Config, ConfigFactory, ConfigValue }
-import org.scalatest
+import com.typesafe.config.ConfigFactory
 import org.scalatest.{ FunSuite, Matchers }
 import scalaz.syntax.applicative._
 
-import scala.collection.JavaConversions._
-import scala.util.{ Failure, Success, Try }
-import scalaz.{ Failure => ZFailure }
+import scala.collection.JavaConverters._
+import scala.util.{ Success, Try }
 
 class OptionExtractorSpec extends FunSuite with Matchers {
 
@@ -31,7 +27,7 @@ class OptionExtractorSpec extends FunSuite with Matchers {
   test("Missing optional values should not result in error") {
     val complexInstance = ComplexExample('*', "string", false, 0.9d, 23, 12L, None, None, None, None, None, None)
     val config = ConfigFactory.parseMap(
-      Map("char" -> "*", "str" -> "string", "bool" -> "false", "dbl" -> "0.9", "in" -> "23", "lng" -> "12")
+      Map("char" -> "*", "str" -> "string", "bool" -> "false", "dbl" -> "0.9", "in" -> "23", "lng" -> "12").asJava
     )
     val validationResult: Try[ComplexExample] =
       config.extract[Character]("char") |@| config.extract[String]("str") |@|
@@ -73,7 +69,7 @@ class OptionExtractorSpec extends FunSuite with Matchers {
         "optdbl"  -> "0.9",
         "optin"   -> "23",
         "optlng"  -> "12"
-      )
+      ).asJava
     )
     val validationResult
       : Try[ComplexExample] = config.extract[Character]("char") |@| config.extract[String]("str") |@| config
@@ -89,7 +85,7 @@ class OptionExtractorSpec extends FunSuite with Matchers {
   case class SimpleExample(char: Character, bool: Boolean, in: Int)
 
   test("Missing non optional values should result in a Failure") {
-    val config = ConfigFactory.parseMap(Map("char" -> "*", "in" -> "23"))
+    val config = ConfigFactory.parseMap(Map("char" -> "*", "in" -> "23").asJava)
     val validationResult
       : Try[SimpleExample] = config.extract[Character]("char") |@| config.extract[Boolean]("bool") |@| config
       .extract[Int]("in") apply SimpleExample.apply
@@ -98,7 +94,7 @@ class OptionExtractorSpec extends FunSuite with Matchers {
   }
 
   test("Non optional values of the wrong type should result in a Failure") {
-    val config = ConfigFactory.parseMap(Map("char" -> "*", "bool" -> "nee", "in" -> "234,34"))
+    val config = ConfigFactory.parseMap(Map("char" -> "*", "bool" -> "nee", "in" -> "234,34").asJava)
     val validationResult
       : Try[SimpleExample] = config.extract[Character]("char") |@| config.extract[Boolean]("bool") |@| config
       .extract[Int]("in") apply SimpleExample.apply

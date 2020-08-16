@@ -23,19 +23,21 @@ SOFTWARE.
  */
 package org.tupol
 
+import scala.concurrent.duration.{ FiniteDuration, _ }
+
 /** A few common functions that might be useful. */
 package object utils {
 
   /**
-   * Run a block and return the block result and the runtime in millis
+   * Run a block and return the block result and the runtime duration
    * @param block
    * @return
    */
-  def timeCode[T](block: => T): (T, Long) = {
+  def timeCode[T](block: => T): (T, FiniteDuration) = {
     val start  = System.currentTimeMillis
     val result = block
     val end    = System.currentTimeMillis
-    (result, end - start)
+    (result, FiniteDuration(end - start, MILLISECONDS))
   }
 
 }

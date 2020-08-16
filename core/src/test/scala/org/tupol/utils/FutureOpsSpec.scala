@@ -2,6 +2,7 @@ package org.tupol.utils
 
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{ FunSuite, Matchers }
+import org.tupol.utils.FutureOps.TraversableFuturesOps
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
@@ -81,4 +82,28 @@ class FutureOpsSpec extends FunSuite with Matchers with ScalaFutures {
     Future.failed[Int](ex).mapFailure(wrap).failed.futureValue.getCause shouldBe ex
   }
 
+  test("Seq.allOkOrFail yields a Success for a list of a single element") {
+    val result = Seq(Future.successful(1)).allOkOrFail
+    result shouldBe a[Future[_]]
+    result.futureValue should contain theSameElementsAs (Seq(1))
+  }
+
+  test("Seq.allOkOrFail yields a Success") {
+    val result = Seq(Future.successful(1), Future.successful(2)).allOkOrFail
+    result shouldBe a[Future[_]]
+    result.futureValue shouldBe (Seq(1, 2))
+  }
+
+  test("Seq.allOkOrFail for an empty list yields a Success") {
+    val result = Seq[Future[Int]]().allOkOrFail
+    result shouldBe a[Future[_]]
+    result.futureValue.isEmpty shouldBe true
+  }
+
+  test("Seq.allOkOrFail yields the last Failure") {
+    val ex1    = new Exception("ex1")
+    val ex2    = new Exception("ex2")
+    val result = Seq(Future.successful(1), Future.failed(ex1), Future.successful(2), Future.failed(ex2)).allOkOrFail
+    result.failed.futureValue shouldBe ex2
+  }
 }

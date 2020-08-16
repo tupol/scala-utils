@@ -1,12 +1,17 @@
 # Release Notes
 
+## 1.0.0-RC02
+
+- Minor project refactoring and cleanup
+- Added `Future.allOkOrFail`
+
+- 
 ## 1.0.0-RC01
 
 - Major project refactoring and cleanup
 - The core utilities that have no external dependencies are moved to the `core` module
 - The config utilities framework is moved to the `config-z` module
 - Added more utilities, for `Future`, `Either` and guarding code through `Bracket`s
-
 
 ## 0.2.0
   - `Configurator`s can also be used as `Extractor`s

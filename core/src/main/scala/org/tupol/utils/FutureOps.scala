@@ -82,4 +82,12 @@ object FutureOps {
       future.transform((success: T) => success, (failure: Throwable) => map(failure))
   }
 
+  /** Simple decorator for the `Traversable[Future[_]]` */
+  implicit class TraversableFuturesOps[T](val trys: Traversable[Future[T]]) {
+
+    /** Flatten a `Traversable[Future[T]]` to a `Future[Traversable[T]]`, which is a failure if any if the Futures is a failure.
+     * In case of a failure, the latest `Failure` will be returned */
+    def allOkOrFail(implicit ec: ExecutionContext): Future[Traversable[T]] = FutureUtils.allOkOrFail(trys)
+
+  }
 }

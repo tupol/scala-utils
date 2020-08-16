@@ -1,11 +1,7 @@
 package org.tupol.utils.configz
 
-import com.typesafe.config.ConfigException.BadValue
-import com.typesafe.config.{ Config, ConfigFactory }
-import org.tupol.utils.configz.Extractor.rangeExtractor.parseStringToRange
+import com.typesafe.config.ConfigFactory
 import org.scalatest.{ FunSuite, Matchers }
-import scalaz.syntax.applicative._
-import scalaz.{ ValidationNel, Failure => ZFailure }
 
 class StringToRangeExtractorSpec extends FunSuite with Matchers {
 
