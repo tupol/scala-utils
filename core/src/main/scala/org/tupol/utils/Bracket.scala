@@ -57,4 +57,5 @@ object Bracket {
    */
   def auto[R <: AutoCloseable, T](resource: => R)(code: R => T): Try[T] =
     Bracket(resource)(_.close())(code)
+
 }
