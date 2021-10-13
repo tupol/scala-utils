@@ -8,6 +8,7 @@
 
 ## External References
 
+- [Sonatype Nexus Repository Manager](https://oss.sonatype.org/#welcome)
 - [OSSRH Guide](https://central.sonatype.org/pages/ossrh-guide.html)
 - [Working with PGP Signatures](https://central.sonatype.org/pages/working-with-pgp-signatures.html)
 - [SBT Using Sonatype](https://www.scala-sbt.org/0.13/docs/Using-Sonatype.html)

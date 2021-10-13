@@ -85,6 +85,7 @@ object TryOps {
 
     /** Convenience decoration to convert `Try[T]` to `Future[T]` using Future.fromTry`` */
     def asFuture: Future[T] = Future.fromTry(attempt)
+
   }
 
   /** Simple decorator for the `Traversable[Try[_]]` */

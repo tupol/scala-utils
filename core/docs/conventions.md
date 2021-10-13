@@ -7,16 +7,16 @@ We should ***contain*** implicit additional behavior for types and use a convent
 
 **`object`s that have a name suffixed by `Ops` contain implicit behavior.**
 
-For example, the `ResultSetOps.scala` should contain a top level object called `ResultSetOps` which
-adds implicit behavior to the `ResultSet` data type.
+For example, the `TryOps.scala` should contain a top level object called `TryOps` which
+adds implicit behavior to the `Try` data type.
 
 In case we want to expose non-implicit behavior for a type, we can add the utility functions
 to a different object than the one containing the implicit behavior.
 
 **`object`s that have a name suffixed by `Utils` contain explicit behavior mirroring the `Ops` one.**
 
-For example, the `ResultSetUtils.scala` should contain a top level object called `ResultSetUtils`
- which adds explicit behavior to the `ResultSet` data type.
+For example, the `TryUtils.scala` should contain a top level object called `TryUtils`
+ which adds explicit behavior to the `Try` data type.
 
 For a given type we can have both `Ops` and `Utils`, just one of them or none.
 
