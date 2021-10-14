@@ -1,9 +1,10 @@
-package org.tupol.utils.configz
+package org.tupol.configz
 
 import com.typesafe.config.ConfigFactory
-import org.scalatest.{ FunSuite, Matchers }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class StringToRangeExtractorSpec extends FunSuite with Matchers {
+class StringToRangeExtractorSpec extends AnyFunSuite with Matchers {
 
   test("Extract a Range of a single value should be successful") {
     val config = ConfigFactory.parseString("""

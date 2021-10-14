@@ -1,11 +1,11 @@
-package org.tupol.utils.config
+package org.tupol.configz
 
 import com.typesafe.config.ConfigFactory
-import org.scalatest.{ FunSuite, Matchers }
-import org.tupol.utils.configz.RichConfig
-import scalaz.{ Failure => ZFailure, Success => ZSuccess }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
+import scalaz.{Failure => ZFailure, Success => ZSuccess}
 
-class RichConfigSpec extends FunSuite with Matchers {
+class RichConfigSpec extends AnyFunSuite with Matchers {
 
   test("validatePath should succeed if the path exists") {
     val path   = "prop"

@@ -1,8 +1,9 @@
 package org.tupol.utils
 
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class EitherArraySpec extends WordSpec with Matchers {
+class EitherArraySpec extends AnyWordSpec with Matchers {
 
   import org.tupol.utils.EitherOps._
   import org.tupol.utils.EitherUtils._

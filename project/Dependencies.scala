@@ -6,8 +6,8 @@ object Dependencies {
     val scala            = "2.12.12"
     val crossScala       = Seq(scala)
     val scalaz           = "7.2.26"
-    val scalatest        = "3.0.8"
-    val scalacheck       = "1.14.1"
+    val scalatest        = "3.1.1"
+    val scalacheck       = "1.15.1"
     val json4s           = "3.6.8"
     val scala_logging    = "3.9.2"
     val mockito          = "1.14.4"

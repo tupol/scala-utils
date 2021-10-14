@@ -1,10 +1,10 @@
-package org.tupol.utils.configz
+package org.tupol.configz
 
 import com.typesafe.config.ConfigException.BadValue
 import org.scalacheck.Prop.forAll
 import org.scalacheck.{ Gen, Properties }
-import org.scalatest.Matchers
-import org.tupol.utils.configz.Extractor.rangeExtractor.parseStringToRange
+import org.scalatest.matchers.should.Matchers
+import org.tupol.configz.Extractor.rangeExtractor.parseStringToRange
 
 class StringToRangeProp extends Properties("Range") with Matchers {
 
@@ -13,7 +13,7 @@ class StringToRangeProp extends Properties("Range") with Matchers {
 
   property("commons#parseStringToRange - creates sequence for a single int value") = forAll(positiveInts) { (i: Int) =>
     val input  = s"$i"
-    val output = parseStringToRange(input, "somePath")
+    val output = parseStringToRange(input, "somePath").get
 
     output.head == i
     output.last == i
@@ -22,7 +22,7 @@ class StringToRangeProp extends Properties("Range") with Matchers {
   property("commons#parseStringToRange - creates sequence for a fully defined range") = forAll(positiveInts) {
     (i: Int) =>
       val input  = s"${i}, ${i + 10}, 1"
-      val output = parseStringToRange(input, "somePath")
+      val output = parseStringToRange(input, "somePath").get
       output.head == i
       output.last == i + 10
   }
@@ -31,7 +31,7 @@ class StringToRangeProp extends Properties("Range") with Matchers {
     forAll(positiveInts) { (i: Int) =>
       val input = s"${i + 1}, $i, 1"
       val ex = intercept[BadValue] {
-        parseStringToRange(input, "somePath")
+        parseStringToRange(input, "somePath").get
       }
       ex.isInstanceOf[BadValue]
     }
@@ -40,15 +40,15 @@ class StringToRangeProp extends Properties("Range") with Matchers {
     (i: Int, s: Int) =>
       val input = s"$i, ${i + 1}, $s"
       val ex = intercept[BadValue] {
-        parseStringToRange(input, "somePath")
+        parseStringToRange(input, "somePath").get
       }
       ex.isInstanceOf[BadValue]
   }
 
   property("commons#parseStringToRange - throws BadValue for any string") = forAll { (input: String) =>
-    val badInput = s"_ $input;@#*&"
+    val badInput = s"_;@#* $input;@#*&"
     val ex = intercept[BadValue] {
-      parseStringToRange(input, "somePath")
+      parseStringToRange(input, "somePath").get
     }
     ex.isInstanceOf[BadValue]
   }

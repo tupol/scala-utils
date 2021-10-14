@@ -1,12 +1,12 @@
 package org.tupol.utils
 
+import org.scalatest.funsuite.AnyFunSuite
+
 import java.nio.ByteBuffer
-
-import org.scalatest.{ FunSuite, Matchers }
-
+import org.scalatest.matchers.should.Matchers
 import org.tupol.utils.ByteableOps._
 
-class ByteableSpec extends FunSuite with Matchers {
+class ByteableSpec extends AnyFunSuite with Matchers {
 
   test("short round-trip") {
     val value = 12.toShort

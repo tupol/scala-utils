@@ -1,11 +1,16 @@
 # Release Notes
 
+## 1.0.0
+
+- Added the Collections `toOptionNel` utility
+- Further refactoring of the `config-z` module
+
+
 ## 1.0.0-RC02
 
 - Minor project refactoring and cleanup
 - Added `Future.allOkOrFail`
-
-- 
+ 
 ## 1.0.0-RC01
 
 - Major project refactoring and cleanup

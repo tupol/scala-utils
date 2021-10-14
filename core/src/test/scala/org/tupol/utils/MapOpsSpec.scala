@@ -1,13 +1,13 @@
 package org.tupol.utils
 
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
+
 import java.util
 import java.util.Properties
-
-import org.scalatest.{ FunSuite, Matchers }
-
 import scala.collection.JavaConverters._
 
-class MapOpsSpec extends FunSuite with Matchers {
+class MapOpsSpec extends AnyFunSuite with Matchers {
 
   import CollectionOps._
 

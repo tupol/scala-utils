@@ -42,8 +42,8 @@ case class MyComplexExample(example: MySimpleExample, separatorChar: String, sep
   }
 }
 
-import org.tupol.utils.configz.Configurator
-import org.tupol.utils.configz._
+import org.tupol.configz.Configurator
+import org.tupol.configz._
 
 /**
  * This is the configurator implementation for the MyExample case class
@@ -95,7 +95,7 @@ object MyComplexExampleDemo extends App {
   // This is the place where the "magic happens" and everything goes well
   // Notice that we extract the exact configuration that we need out of the root configuration object
   // by calling `goodConfig.getConfig("myExample")`
-  val myExample = MyComplexExample(goodConfig.getConfig("myExample")).get
+  val myExample = MyComplexExample.extract(goodConfig.getConfig("myExample")).get
   myExample.write("A quick brown fox...")
 
   println(s"""|
@@ -110,5 +110,5 @@ object MyComplexExampleDemo extends App {
                                                 |  separatorSize=81
                                                 |}
     """.stripMargin)
-  print(MyComplexExample(wrongConfig.getConfig("myExample")).recover { case (t: Throwable) => t.getMessage }.get)
+  print(MyComplexExample.extract(wrongConfig.getConfig("myExample")).recover { case (t: Throwable) => t.getMessage }.get)
 }

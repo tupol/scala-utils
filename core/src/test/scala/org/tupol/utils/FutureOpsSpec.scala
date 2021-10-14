@@ -1,13 +1,14 @@
 package org.tupol.utils
 
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{ FunSuite, Matchers }
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.funsuite.AnyFunSuite
 import org.tupol.utils.FutureOps.TraversableFuturesOps
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
 
-class FutureOpsSpec extends FunSuite with Matchers with ScalaFutures {
+class FutureOpsSpec extends AnyFunSuite with Matchers with ScalaFutures {
 
   import org.tupol.utils.implicits._
 

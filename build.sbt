@@ -56,6 +56,7 @@ lazy val coverageSettings = Seq(
   coverageFailOnMinimum in Test := true,
   coverageExcludedPackages := ".*BuildInfo.*"
 )
+
 lazy val basicSettings = Seq(
   organization := "org.tupol",
   name := "scala-utils",

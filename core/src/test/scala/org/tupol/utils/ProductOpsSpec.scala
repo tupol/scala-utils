@@ -1,8 +1,10 @@
 package org.tupol.utils
 
-import org.scalatest.{ Matchers, WordSpec }
 
-class ProductOpsSpec extends WordSpec with Matchers {
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+
+class ProductOpsSpec extends AnyWordSpec with Matchers {
 
   import org.tupol.utils.ProductOps._
 
