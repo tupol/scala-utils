@@ -1,13 +1,14 @@
-package org.tupol.utils.configz
+package org.tupol.configz
 
 import com.typesafe.config.ConfigFactory
-import org.scalatest.{ FunSuite, Matchers }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 import scalaz.syntax.applicative._
 
 import scala.collection.JavaConverters._
-import scala.util.{ Success, Try }
+import scala.util.{Success, Try}
 
-class OptionExtractorSpec extends FunSuite with Matchers {
+class OptionExtractorSpec extends AnyFunSuite with Matchers {
 
   case class ComplexExample(
     char: Character,

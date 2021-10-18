@@ -38,8 +38,8 @@ case class MySimpleExample(path: String, overwrite: Boolean) {
     println(s"""Writing "$something" to "$path" with the overwrite flag set to "$overwrite".""")
 }
 
-import org.tupol.utils.configz.Configurator
-import org.tupol.utils.configz._
+import org.tupol.configz.Configurator
+import org.tupol.configz._
 
 /**
  * This is the configurator implementation for the MySimpleExample case class
@@ -74,7 +74,7 @@ object MySimpleExampleDemo extends App {
   // This is the place where the "magic happens" and everything goes well
   // Notice that we extract the exact configuration that we need out of the root configuration object
   // by calling `goodConfig.getConfig("myExample")`
-  val myExample = MySimpleExample(goodConfig.getConfig("myExample")).get
+  val myExample = MySimpleExample.extract(goodConfig.getConfig("myExample")).get
   myExample.write("A quick brown fox...")
 
   println(s"""|
@@ -85,5 +85,5 @@ object MySimpleExampleDemo extends App {
   val wrongConfig = ConfigFactory.parseString("""
                                                 |myExample: {}
     """.stripMargin)
-  print(MySimpleExample(wrongConfig.getConfig("myExample")).recover { case (t: Throwable) => t.getMessage }.get)
+  print(MySimpleExample.extract(wrongConfig.getConfig("myExample")).recover { case (t: Throwable) => t.getMessage }.get)
 }

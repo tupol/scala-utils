@@ -1,12 +1,14 @@
 package org.tupol.utils.tmp
 
+
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.{ FunSuite, Matchers }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 import scala.collection.mutable.ArrayBuffer
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
-class TryOpsSpec extends FunSuite with Matchers with ScalaFutures {
+class TryOpsSpec extends AnyFunSuite with Matchers with ScalaFutures {
 
   import org.tupol.utils.implicits._
 

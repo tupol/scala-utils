@@ -1,11 +1,12 @@
-package org.tupol.utils.configz
+package org.tupol.configz
 
-import com.typesafe.config.{ Config, ConfigFactory }
-import org.scalatest.{ FunSuite, Matchers }
+import com.typesafe.config.{Config, ConfigFactory}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 import scalaz.syntax.applicative._
-import scalaz.{ ValidationNel, Failure => ZFailure }
+import scalaz.{ValidationNel, Failure => ZFailure}
 
-class MapExtractorSpec extends FunSuite with Matchers {
+class MapExtractorSpec extends AnyFunSuite with Matchers {
 
   case class ComplexExample(
     char: Character,

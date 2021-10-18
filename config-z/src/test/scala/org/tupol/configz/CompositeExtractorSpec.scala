@@ -1,16 +1,18 @@
-package org.tupol.utils.configz
+package org.tupol.configz
 
-import com.typesafe.config.{ Config, ConfigFactory }
-import org.scalatest.{ FunSuite, Matchers }
+import com.typesafe.config.{Config, ConfigFactory}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 import scalaz.syntax.applicative._
-import scalaz.{ ValidationNel, Failure => ZFailure }
+import scalaz.{ValidationNel, Failure => ZFailure}
 
-class CompositeExtractorSpec extends FunSuite with Matchers {
+class CompositeExtractorSpec extends AnyFunSuite with Matchers {
 
   case class CustomConf(prop1: Int, prop2: Seq[Long])
   object CustomConf extends Configurator[CustomConf] {
     override def validationNel(config: Config): ValidationNel[Throwable, CustomConf] =
       config.extract[Int]("prop1") |@| config.extract[Seq[Long]]("prop2") apply CustomConf.apply
+
   }
 
   test("Extract CustomConf from path should be successful") {

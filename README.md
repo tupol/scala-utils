@@ -35,11 +35,11 @@ where the latest artifacts can be found.
 Usage with SBT, adding a dependency to the latest version of scala utils to your sbt build definition file:
 
 ```scala
-  libraryDependencies += "org.tupol" %% "scala-utils-core" % "1.0.0-RC02"
+  libraryDependencies += "org.tupol" %% "scala-utils-core" % "1.0.0"
 ```
 or
 ```scala
-  libraryDependencies += "org.tupol" %% "scala-utils-core" % "1.0.0-RC02"
+  libraryDependencies += "org.tupol" %% "scala-utils-core" % "1.0.0"
 ```
 
 For Snapshots, the Sonatype snapshots repo needs to be added as well:
@@ -56,11 +56,16 @@ Some `config-z` usage examples can be found under [`config-z/src/test/scala/exam
 
 ## What's new?
 
-**1.0.0-RC** Effort Started
+**1.1.0-SNAPSHOT**
+  - Refactored the `configz` module
+  - Added a few more utility implicits to the `core` module
+
+
+**1.0.0**
 
 This new major version aims to bring a new and hopefully cleaner project structure.
 The `scalaz` based configuration is moved to a different module to isolate better from the core.
-In the future a `cats` based version will be added as well.
+In the future a `cats` based version might be added as well.
 
 More core utilities were added and the old ones were brushed up for better consistency and clarity.
 

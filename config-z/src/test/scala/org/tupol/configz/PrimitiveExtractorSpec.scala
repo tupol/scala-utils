@@ -1,13 +1,14 @@
-package org.tupol.utils.configz
-
-import java.sql.{ Date, Timestamp }
-import java.time.{ Duration, LocalDate, LocalDateTime }
+package org.tupol.configz
 
 import com.typesafe.config.ConfigFactory
-import org.scalatest.{ FunSuite, Matchers }
-import scalaz.{ Failure => ZFailure }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
+import scalaz.{Failure => ZFailure}
 
-class PrimitiveExtractorSpec extends FunSuite with Matchers {
+import java.sql.{Date, Timestamp}
+import java.time.{Duration, LocalDate, LocalDateTime}
+
+class PrimitiveExtractorSpec extends AnyFunSuite with Matchers {
 
   case class ComplexExample(
     char: Character,

@@ -1,11 +1,12 @@
-package org.tupol.utils.configz
+package org.tupol.configz
 
-import com.typesafe.config.{ Config, ConfigFactory }
-import org.scalatest.{ FunSuite, Matchers }
+import com.typesafe.config.{Config, ConfigFactory}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.funsuite.AnyFunSuite
 import scalaz.syntax.applicative._
-import scalaz.{ ValidationNel, Failure => ZFailure }
+import scalaz.{ValidationNel, Failure => ZFailure}
 
-class EitherExtractorSpec extends FunSuite with Matchers {
+class EitherExtractorSpec extends AnyFunSuite with Matchers {
 
   case class CustomConf(prop1: Int, prop2: Seq[Long])
   object CustomConf extends Configurator[CustomConf] {

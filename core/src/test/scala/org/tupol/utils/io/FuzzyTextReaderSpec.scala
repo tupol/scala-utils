@@ -1,10 +1,11 @@
 package org.tupol.utils.io
 
-import org.scalatest.{ FunSuite, Matchers }
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.Failure
 
-class FuzzyTextReaderSpec extends FunSuite with Matchers {
+class FuzzyTextReaderSpec extends AnyFunSuite with Matchers {
 
   import FuzzyTextReader._
 

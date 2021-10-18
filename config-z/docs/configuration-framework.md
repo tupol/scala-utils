@@ -1,11 +1,11 @@
 # Configuration Framework
 
-## Deprecated
+[[_TOC_]]
 
 ***Attention!***
 
-The *Configuration framework* is deprecated, as the
-[PureConfig](https://pureconfig.github.io/) framework is much more mature and provides a better
+The *Configuration framework* is deprecated, as other frameworks, like
+[PureConfig](https://pureconfig.github.io/), are more mature and provides a better
 overall solution.
 
 ## Scope 
@@ -19,10 +19,10 @@ The configuration framework is based on *ScalaZ* `validation` infrastructure.
 
 The main reason for using the *ScalaZ* `ValidationNel` is to be able to collect all error messages found during the
 configuration of the target object, and showing them to the user in one go, rather than one by one, as each problem is
-fixed, application is ran again and the next problem is revealed.
+fixed, application is run again and the next problem is revealed.
 
 The key concepts are:
-- `org.tupol.utils.Configurator`
+- `org.tupol.configz.Configurator`
 - `scalaz.ValidationNel`; for more details look [here](https://github.com/scalaz/scalaz/blob/series/7.2.x/core/src/main/scala/scalaz/Validation.scala)
 - `com.typesafe.config.Config`; for more details look [here](https://github.com/typesafehub/config)
 
@@ -39,7 +39,6 @@ The `Configurator` is used as a factory for case classes starting from a Typesaf
   }
 ```
 The type parameter `T` is the type of the class instance we are constructing.
-
 
 
 ## Usage
@@ -73,7 +72,7 @@ case class MySimpleExample(path: String, overwrite: Boolean) {
 #### 2. Create a corresponding `Configurator` and implement the `validationNel()` function 
 
 ```scala
-import org.tupol.scala.config.Configurator
+import org.tupol.configz.Configurator
 
 object MySimpleExample extends Configurator[MySimpleExample] {
 
@@ -96,7 +95,7 @@ object MySimpleExample extends Configurator[MySimpleExample] {
 
 1. Normally we define the configurator factory in a companion object attached to the case class that we want to configure.
 
-2. The only top level import is `import org.tupol.utils.configz.Configurator`.
+2. The only top level import is `import org.tupol.configz.Configurator`.
    We are quite keen on keeping the top level imports clean, and only import locally what we need.
    The subsequent sets of imports are inside the `MySimpleExample` object scope and in the `validationNel` function scope.
 
@@ -159,7 +158,7 @@ case class MyComplexExample(example: MySimpleExample, separatorChar: String, sep
 #### 2. Create a corresponding `Configurator` and implement the `validationNel()` function 
 
 ```scala
-import org.tupol.scala.config.Configurator
+import org.tupol.configz.Configurator
 
 object MyComplexExample extends Configurator[MyComplexExample] {
 
@@ -188,7 +187,7 @@ written more elegantly like the following:
 
 
 ```scala
-import org.tupol.scala.config.Configurator
+import org.tupol.configz.Configurator
 
 implicit val mySimpleExampleExtractor = MySimpleExample
 

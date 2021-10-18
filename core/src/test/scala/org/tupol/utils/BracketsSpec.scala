@@ -1,10 +1,11 @@
 package org.tupol.utils
 
-import org.scalatest.{ FunSuite, Matchers }
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.funsuite.AnyFunSuite
 
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
-class BracketsSpec extends FunSuite with Matchers {
+class BracketsSpec extends AnyFunSuite with Matchers {
 
   test("Bracket.auto should be successful if everything goes well and the resource should be closed") {
     val expectedResult      = 111

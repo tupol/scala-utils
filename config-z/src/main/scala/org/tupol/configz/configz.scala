@@ -21,20 +21,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package org.tupol.utils
+package org.tupol
 
-import java.sql.{ Date, Timestamp }
-import java.time.{ Duration, LocalDate, LocalDateTime }
-import java.util
-
-import com.typesafe.config.ConfigException.{ BadValue, Missing }
-import com.typesafe.config.{ Config, ConfigObject }
+import com.typesafe.config.ConfigException.{BadValue, Missing}
+import com.typesafe.config.{Config, ConfigObject}
+import org.tupol.utils.implicits._
 import scalaz.syntax.validation._
-import scalaz.{ NonEmptyList, ValidationNel }
+import scalaz.{NonEmptyList, ValidationNel}
 
+import java.sql.{Date, Timestamp}
+import java.time.{Duration, LocalDate, LocalDateTime}
+import java.util
 import scala.annotation.implicitNotFound
 import scala.collection.JavaConverters._
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 /**
  * This package holds a framework for extracting configuration objects out of configuration files, using the
@@ -59,8 +59,8 @@ package object configz {
      * @param path the path at which the value resides.
      * @return the value that was retrieved.
      */
-    def extract(config: Config, path: String): T
-    def extract(config: Config): T = extract(config.atPath(EmptyPath), EmptyPath)
+    def extract(config: Config, path: String): Try[T]
+    def extract(config: Config): Try[T] = extract(config.atPath(EmptyPath), EmptyPath)
 
   }
 
@@ -69,12 +69,12 @@ package object configz {
    * @tparam T, the type of class this Configurator knows how to validate/construct.
    */
   trait Configurator[T] extends Extractor[T] {
-    def validationNel(config: Config): ValidationNel[Throwable, T]
+    protected def validationNel(config: Config): ValidationNel[Throwable, T]
+    override def extract(config: Config, path: String): Try[T] =
+      Try(config.getConfig(path)).flatMap(validationNel(_))
+  }
 
-    override def extract(config: Config, path: String): T = apply(config.getConfig(path)).get
-
-    def apply(config: Config): Try[T] = validationNel(config)
-  } /**
+  /**
    * Adds the extract method to a Typesafe Config instance, allowing us to request values from it like so:
    * {{config.extract[Double]("double")}} or {{config.extract[Option[Range]]("range")}}
    *
@@ -84,7 +84,7 @@ package object configz {
     def extract[T: Extractor](path: String): ValidationNel[Throwable, T] =
       tryExtraction(Extractor[T].extract(config, path))
 
-    private def tryExtraction[T](extract: => T): ValidationNel[Throwable, T] = Try(extract) match {
+    private def tryExtraction[T](extract: => Try[T]): ValidationNel[Throwable, T] = extract match {
       case Success(value)                => value.success
       case Failure(exception: Throwable) => exception.failureNel
     }
@@ -131,84 +131,84 @@ package object configz {
     def apply[T](implicit T: Extractor[T]): Extractor[T] = T
 
     implicit val stringExtractor = new Extractor[String] {
-      def extract(config: Config, path: String): String = config.getString(path)
+      def extract(config: Config, path: String): Try[String] = Try(config.getString(path))
     }
 
     implicit val booleanExtractor = new Extractor[Boolean] {
-      def extract(config: Config, path: String): Boolean = config.getBoolean(path)
+      def extract(config: Config, path: String): Try[Boolean] = Try(config.getBoolean(path))
     }
 
     implicit val characterExtractor = new Extractor[Character] {
-      def extract(config: Config, path: String): Character = config.getString(path).charAt(0)
+      def extract(config: Config, path: String): Try[Character] = Try(config.getString(path).charAt(0))
     }
 
     implicit val intExtractor = new Extractor[Int] {
-      def extract(config: Config, path: String): Int = config.getInt(path)
+      def extract(config: Config, path: String): Try[Int] = Try(config.getInt(path))
     }
 
     implicit val longExtractor = new Extractor[Long] {
-      def extract(config: Config, path: String): Long = config.getLong(path)
+      def extract(config: Config, path: String): Try[Long] = Try(config.getLong(path))
     }
 
     implicit val doubleExtractor = new Extractor[Double] {
-      def extract(config: Config, path: String): Double = config.getDouble(path)
+      def extract(config: Config, path: String): Try[Double] = Try(config.getDouble(path))
     }
 
     implicit val durationExtractor = new Extractor[Duration] {
-      def extract(config: Config, path: String): Duration = config.getDuration(path)
+      def extract(config: Config, path: String): Try[Duration] = Try(config.getDuration(path))
     }
 
     /** Expected format: <code>yyyy-[m]m-[d]d hh:mm:ss[.f...]</code> */
     implicit val timestampExtractor = new Extractor[Timestamp] {
-      def extract(config: Config, path: String): Timestamp = Timestamp.valueOf(config.getString(path))
+      def extract(config: Config, path: String): Try[Timestamp] = Try(Timestamp.valueOf(config.getString(path)))
     }
 
     /** Expected format: <code>yyyy-[m]m-[d]d</code>*/
     implicit val dateExtractor = new Extractor[Date] {
-      def extract(config: Config, path: String): Date = Date.valueOf(config.getString(path))
+      def extract(config: Config, path: String): Try[Date] = Try(Date.valueOf(config.getString(path)))
     }
 
     implicit val localDateExtractor = new Extractor[LocalDate] {
-      def extract(config: Config, path: String): LocalDate = LocalDate.parse(config.getString(path))
+      def extract(config: Config, path: String): Try[LocalDate] = Try(LocalDate.parse(config.getString(path)))
     }
 
     implicit val localDateTimeExtractor = new Extractor[LocalDateTime] {
-      def extract(config: Config, path: String): LocalDateTime = LocalDateTime.parse(config.getString(path))
+      def extract(config: Config, path: String): Try[LocalDateTime] = Try(LocalDateTime.parse(config.getString(path)))
     }
 
     implicit val anyListExtractor = new Extractor[Seq[Any]] {
-      def extract(config: Config, path: String): Seq[Any] =
-        Seq(config.getAnyRefList(path).asScala: _*)
+      def extract(config: Config, path: String): Try[Seq[Any]] =
+        Try(Seq(config.getAnyRefList(path).asScala: _*))
     }
 
     implicit val stringListExtractor = new Extractor[Seq[String]] {
-      def extract(config: Config, path: String): Seq[String] =
-        Seq(config.getStringList(path).asScala: _*)
+      def extract(config: Config, path: String): Try[Seq[String]] =
+        Try(Seq(config.getStringList(path).asScala: _*))
     }
 
     implicit val booleanListExtractor = new Extractor[Seq[Boolean]] {
-      def extract(config: Config, path: String): Seq[Boolean] =
-        Seq(config.getBooleanList(path).asScala: _*).map(_.booleanValue())
+      def extract(config: Config, path: String): Try[Seq[Boolean]] =
+        Try(Seq(config.getBooleanList(path).asScala: _*).map(_.booleanValue()))
     }
 
     implicit val intListExtractor = new Extractor[Seq[Int]] {
-      def extract(config: Config, path: String): Seq[Int] =
-        Seq(config.getIntList(path).asScala: _*).map(_.intValue())
+      def extract(config: Config, path: String): Try[Seq[Int]] =
+        Try(Seq(config.getIntList(path).asScala: _*).map(_.intValue()))
     }
 
     implicit val longListExtractor = new Extractor[Seq[Long]] {
-      def extract(config: Config, path: String): Seq[Long] =
-        Seq(config.getLongList(path).asScala: _*).map(_.longValue())
+      def extract(config: Config, path: String): Try[Seq[Long]] =
+        Try(Seq(config.getLongList(path).asScala: _*).map(_.longValue()))
     }
 
     implicit val doubleListExtractor = new Extractor[Seq[Double]] {
-      def extract(config: Config, path: String): Seq[Double] =
-        Seq(config.getDoubleList(path).asScala: _*).map(_.doubleValue)
+      def extract(config: Config, path: String): Try[Seq[Double]] =
+        Try(Seq(config.getDoubleList(path).asScala: _*).map(_.doubleValue))
     }
 
     implicit val configListExtractor = new Extractor[Seq[Config]] {
-      def extract(config: Config, path: String): Seq[Config] =
-        Seq(config.getConfigList(path).asScala.map(_.withOnlyPath(path)): _*)
+      def extract(config: Config, path: String): Try[Seq[Config]] =
+        Try(Seq(config.getConfigList(path).asScala.map(_.withOnlyPath(path)): _*))
     }
 
     /**
@@ -218,22 +218,22 @@ package object configz {
      * @return A Seq(T) if we can extract a valid property of the given type or throw an Exception
      */
     implicit def listExtractor[T](implicit extractor: Extractor[T]): Extractor[Seq[T]] = new Extractor[Seq[T]] {
-      override def extract(config: Config, path: String): Seq[T] = {
-        def fromObjects: Seq[T] =
+      override def extract(config: Config, path: String): Try[Seq[T]] = {
+        def fromObjects =
           Seq(config.getObjectList(path).asScala: _*)
-            .map(co => extractor.extract(co.toConfig.atPath(path), path))
-        def fromConfigs: Seq[T] =
+            .map(co => extractor.extract(co.toConfig.atPath(path), path)).allOkOrFail
+        def fromConfigs =
           Seq(config.getConfigList(path).asScala: _*)
-            .map(co => extractor.extract(co.atPath(path), path))
-        def fromList: Seq[T] =
+            .map(co => extractor.extract(co.atPath(path), path)).allOkOrFail
+        def fromList =
           Seq(config.getList(path).asScala: _*)
-            .map(co => extractor.extract(co.atPath(path), path))
-        (Try(fromList) orElse Try(fromConfigs) orElse Try(fromObjects)).get
+            .map(co => extractor.extract(co.atPath(path), path)).allOkOrFail
+        (fromList orElse fromConfigs orElse fromObjects).map(_.toSeq)
       }
     }
 
     implicit val anyMapExtractor = new Extractor[Map[String, Any]] {
-      def extract(config: Config, path: String): Map[String, Any] = {
+      def extract(config: Config, path: String): Try[Map[String, Any]] = {
         def fromObject(o: ConfigObject): Set[(String, Any)] =
           Set(
             config
@@ -248,33 +248,33 @@ package object configz {
           val kv = co.unwrapped.asInstanceOf[util.HashMap[_, _]].asScala.toSeq
           kv.map { case (k, v) => (k.toString, v.asInstanceOf[Any]) }
         }
-        (Try(fromList) orElse Try(fromObject(config.getObject(path))) orElse Try(fromObjects)).get.toMap
+        (Try(fromList) orElse Try(fromObject(config.getObject(path))) orElse Try(fromObjects)).map(_.toMap)
       }
     }
 
     implicit val stringMapExtractor = new Extractor[Map[String, String]] {
-      def extract(config: Config, path: String): Map[String, String] =
-        anyMapExtractor.extract(config, path).mapValues(_.toString)
+      def extract(config: Config, path: String): Try[Map[String, String]] =
+        anyMapExtractor.extract(config, path).map(_.mapValues(_.toString))
     }
 
     implicit val booleanMapExtractor = new Extractor[Map[String, Boolean]] {
-      def extract(config: Config, path: String): Map[String, Boolean] =
-        stringMapExtractor.extract(config, path).mapValues(_.toBoolean)
+      def extract(config: Config, path: String): Try[Map[String, Boolean]] =
+        stringMapExtractor.extract(config, path).map(_.mapValues(_.toBoolean))
     }
 
     implicit val intMapExtractor = new Extractor[Map[String, Int]] {
-      def extract(config: Config, path: String): Map[String, Int] =
-        stringMapExtractor.extract(config, path).mapValues(_.toInt)
+      def extract(config: Config, path: String): Try[Map[String, Int]] =
+        stringMapExtractor.extract(config, path).map(_.mapValues(_.toInt))
     }
 
     implicit val longMapExtractor = new Extractor[Map[String, Long]] {
-      def extract(config: Config, path: String): Map[String, Long] =
-        stringMapExtractor.extract(config, path).mapValues(_.toLong)
+      def extract(config: Config, path: String): Try[Map[String, Long]] =
+        stringMapExtractor.extract(config, path).map(_.mapValues(_.toLong))
     }
 
     implicit val doubleMapExtractor = new Extractor[Map[String, Double]] {
-      def extract(config: Config, path: String): Map[String, Double] =
-        stringMapExtractor.extract(config, path).mapValues(_.toDouble)
+      def extract(config: Config, path: String): Try[Map[String, Double]] =
+        stringMapExtractor.extract(config, path).map(_.mapValues(_.toDouble))
     }
 
     /**
@@ -285,18 +285,18 @@ package object configz {
      */
     implicit def mapExtractor[T](implicit extractor: Extractor[T]): Extractor[Map[String, T]] =
       new Extractor[Map[String, T]] {
-        def extract(config: Config, path: String): Map[String, T] = {
-          def fromObject(o: ConfigObject): Set[(String, T)] =
-            Set(
+        def extract(config: Config, path: String): Try[Map[String, T]] = {
+          def fromObject(o: ConfigObject): Try[Map[String, T]] =
               config
                 .getObject(path)
                 .entrySet
                 .asScala
-                .map(e => (e.getKey, extractor.extract(e.getValue.atPath(e.getKey), e.getKey)))
-                .toSeq: _*
-            )
-          def fromObjects: Seq[(String, T)] = (config.getObjectList(path).asScala).flatMap(fromObject(_))
-          (Try(fromObject(config.getObject(path))) orElse Try(fromObjects)).get.toMap
+                .map(e => extractor.extract(e.getValue.atPath(e.getKey), e.getKey).map((e.getKey, _)))
+                .allOkOrFail
+                .map(_.toMap)
+
+          def fromObjects: Try[Map[String, T]] = Try(config.getObjectList(path).asScala).flatMap(obs => obs.map(fromObject(_)).allOkOrFail.map(_.flatten.toMap))
+          (fromObject(config.getObject(path)) orElse fromObjects)
         }
       }
 
@@ -316,23 +316,23 @@ package object configz {
        * @param path -> optional path for this property
        * @return
        */
-      def parseStringToRange(value: String, path: String = "unknown"): Range =
+      def parseStringToRange(value: String, path: String = "unknown"): Try[Range] =
         Try(value.split(",").map(_.trim.toInt).toSeq) match {
           case Success(start +: stop +: _ +: Nil) if start > stop =>
-            throw new BadValue(path, "The start should be smaller than the stop.")
+            Failure(new BadValue(path, "The start should be smaller than the stop."))
           case Success(_ +: _ +: step +: Nil) if step < 0 =>
-            throw new BadValue(path, "The step should be a positive number.")
+            Failure( new BadValue(path, "The step should be a positive number."))
           case Success(start +: stop +: step +: Nil) =>
-            start to stop by step
+            Success(start to stop by step)
           case Success(v +: Nil) =>
-            v to v
+            Success(v to v)
           case _ =>
-            throw new BadValue(
+            Failure(new BadValue(
               path,
               "The input should contain either an integer or a comma separated list of 3 integers."
-            )
+            ))
         }
-      def extract(config: Config, path: String): Range = parseStringToRange(config.getString(path), path)
+      def extract(config: Config, path: String): Try[Range] = parseStringToRange(config.getString(path), path)
     }
 
     /**
@@ -343,9 +343,9 @@ package object configz {
      * @return A Some(T) if we can extract a valid property of the given type or a None otherwise.
      */
     implicit def optionExtractor[T](implicit extractor: Extractor[T]): Extractor[Option[T]] = new Extractor[Option[T]] {
-      override def extract(config: Config, path: String): Option[T] = Try(extractor.extract(config, path)) match {
-        case Success(value) => Some(value)
-        case Failure(_)     => None
+      override def extract(config: Config, path: String): Try[Option[T]] = extractor.extract(config, path) match {
+        case Success(value) => Success(Some(value))
+        case Failure(_)     => Success(None)
       }
     }
 
@@ -362,10 +362,8 @@ package object configz {
       implicit leftExtractor: Extractor[A],
       rightExtractor: Extractor[B]
     ): Extractor[Either[A, B]] = new Extractor[Either[A, B]] {
-      override def extract(config: Config, path: String): Either[A, B] =
-        (Try(leftExtractor.extract(config, path)).map(Left(_))
-          orElse
-            Try(rightExtractor.extract(config, path)).map(Right(_))).get
+      override def extract(config: Config, path: String): Try[Either[A, B]] =
+        (leftExtractor.extract(config, path)).map(Left(_)) orElse (rightExtractor.extract(config, path)).map(Right(_))
     }
 
   }
