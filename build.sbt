@@ -1,5 +1,4 @@
 import Dependencies.{Versions, _}
-import com.typesafe.sbt.SbtPgp.autoImportImpl.useGpg
 import sbt.Keys.{libraryDependencies, organization}
 import sbt.url
 import sbtbuildinfo.BuildInfoPlugin.autoImport.{buildInfoKeys, buildInfoOptions}
