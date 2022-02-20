@@ -25,17 +25,19 @@ package org.tupol.utils
 
 import scala.concurrent.{ ExecutionContext, Future }
 
-/** Implicit decorator functions for `Future[T]` and `F[Future[T]]`  */
+/** Implicit decorator functions for `Future[T]` and `F[Future[T]]` */
 object FutureOps {
 
-  /** Simple decorator for `Future[T]`, which adds the following simple functions:
+  /**
+   * Simple decorator for `Future[T]`, which adds the following simple functions:
    * - composable error logging
    * - composable success logging
    * - failure mapping
    */
   implicit class FutureOps[T](val future: Future[T]) {
 
-    /**  Log the error using the logging function and return the failure;
+    /**
+     *  Log the error using the logging function and return the failure;
      * This is only called when the `Future` fails and it can be used like
      * {{{
      *   Future(something_that_can_fail()).logFailure(t => println(s"Got a Throwable: ${t}"))
@@ -50,7 +52,8 @@ object FutureOps {
           future
       }
 
-    /** Log the success using the logging function and return the future
+    /**
+     * Log the success using the logging function and return the future
      * This is only called when the `Future` succeeds and it can be used like
      * {{{
      *   Future(something_that_succeeded()).logSuccess(success => println(s"Success: ${success}"))
@@ -64,17 +67,19 @@ object FutureOps {
         t
       }
 
-    /** Log the progress and return back the future.
+    /**
+     * Log the progress and return back the future.
      * @param successLogging
      * @param failureLogging
      * @return the same future
      */
-    def log(successLogging: (T) => Unit, failureLogging: (Throwable) => Unit)(
-      implicit ec: ExecutionContext
+    def log(successLogging: (T) => Unit, failureLogging: (Throwable) => Unit)(implicit
+        ec: ExecutionContext
     ): Future[T] =
       future.logSuccess(successLogging).logFailure(failureLogging)
 
-    /** Wrap the exception into a new exception
+    /**
+     * Wrap the exception into a new exception
      * @param map exception wrapping function
      * @return The original result or the mapped `Throwable`
      */
@@ -85,8 +90,10 @@ object FutureOps {
   /** Simple decorator for the `Traversable[Future[_]]` */
   implicit class TraversableFuturesOps[T](val trys: Traversable[Future[T]]) {
 
-    /** Flatten a `Traversable[Future[T]]` to a `Future[Traversable[T]]`, which is a failure if any if the Futures is a failure.
-     * In case of a failure, the latest `Failure` will be returned */
+    /**
+     * Flatten a `Traversable[Future[T]]` to a `Future[Traversable[T]]`, which is a failure if any if the Futures is a failure.
+     * In case of a failure, the latest `Failure` will be returned
+     */
     def allOkOrFail(implicit ec: ExecutionContext): Future[Traversable[T]] = FutureUtils.allOkOrFail(trys)
 
   }

@@ -49,7 +49,8 @@ final case class TextSourceException(private val message: String) extends Except
  */
 trait TextSourceProcess {
   type LabeledFactory = (String, () => BufferedSource) // (Label or the source type, source factory function)
-  type LabeledAttempt = (String, Try[BufferedSource])  // (Label or the source type, source factory function attempt result)
+  type LabeledAttempt =
+    (String, Try[BufferedSource]) // (Label or the source type, source factory function attempt result)
   def process(path: String): Seq[LabeledFactory]
 
   def source(path: String, charSet: Charset = StandardCharsets.UTF_8): Try[BufferedSource] = {
@@ -66,11 +67,10 @@ trait TextSourceProcess {
             val currentAttempt = Try(attempt())
               .mapFailure(new TextSourceException(s"Could not load the resource as $label from '$trimmedPath'.", _))
             (currentAttempt.isSuccess, currentAttempt +: attempts)
-          } else {
+          } else
             acc
-          }
         }
-      val traceLog = attempts.collect { case (Failure(t)) => t.getMessage }.reverse.mkString("- ", s"\n- ", "")
+      val traceLog                                           = attempts.collect { case (Failure(t)) => t.getMessage }.reverse.mkString("- ", s"\n- ", "")
       attempts.head
         .mapFailure(
           new TextSourceException(

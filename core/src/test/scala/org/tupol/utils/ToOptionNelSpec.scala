@@ -12,7 +12,7 @@ class ToOptionNelSpec extends AnyWordSpec with Matchers {
       Map().toOptionNel shouldBe None
     }
     "return Some list for a non-empty seq" in {
-      val map    = Map((1, 10), (2, 20), (3,30))
+      val map    = Map((1, 10), (2, 20), (3, 30))
       val result = map.toOptionNel
       result shouldBe a[Some[_]]
       result.get should contain theSameElementsAs map

@@ -26,17 +26,19 @@ package org.tupol.utils
 import scala.concurrent.Future
 import scala.util.{ Failure, Success, Try }
 
-/** Implicit decorator functions for `Try[T]` and `F[Try[T]]`  */
+/** Implicit decorator functions for `Try[T]` and `F[Try[T]]` */
 object TryOps {
 
-  /** Simple decorator for `Try[T]`, which adds the following simple functions:
+  /**
+   * Simple decorator for `Try[T]`, which adds the following simple functions:
    * - composable error logging
    * - composable success logging
    * - failure mapping
    */
   implicit class TryOps[T](val attempt: Try[T]) {
 
-    /**  Log the error using the logging function and return the failure;
+    /**
+     *  Log the error using the logging function and return the failure;
      * This is only called when the `Try` is a Failure and it can be used like
      * {{{
      *   Try(something_that_can_fail()).logFailure(t => println(s"Got a Throwable: ${t}"))
@@ -51,7 +53,8 @@ object TryOps {
           attempt
       }
 
-    /** Log the success using the logging function and return the attempt
+    /**
+     * Log the success using the logging function and return the attempt
      * This is only called when the `Try` is a Success and it can be used like
      * {{{
      *   Try(something_that_succeeded()).logSuccess(success => println(s"Success: ${success}"))
@@ -65,7 +68,8 @@ object TryOps {
         t
       }
 
-    /** Log the progress and return back the try.
+    /**
+     * Log the progress and return back the try.
      * @param successLogging
      * @param failureLogging
      * @return the same attempt
@@ -73,7 +77,8 @@ object TryOps {
     def log(successLogging: (T) => Unit, failureLogging: (Throwable) => Unit): Try[T] =
       attempt.logSuccess(successLogging).logFailure(failureLogging)
 
-    /** Wrap the exception into a new exception
+    /**
+     * Wrap the exception into a new exception
      * @param map exception wrapping function
      * @return The original `Success[T]` or a `Failure` containing the mapped `Throwable`
      */
@@ -91,8 +96,10 @@ object TryOps {
   /** Simple decorator for the `Traversable[Try[_]]` */
   implicit class TraversableTryOps[T](val trys: Traversable[Try[T]]) {
 
-    /** Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if any if the Trys is a failure.
-     * In case of a failure, the latest `Failure` will be returned */
+    /**
+     * Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if any if the Trys is a failure.
+     * In case of a failure, the latest `Failure` will be returned
+     */
     def allOkOrFail: Try[Traversable[T]] = TryUtils.allOkOrFail(trys)
 
     /** Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if ALL of the Trys is a failure. */
@@ -103,8 +110,10 @@ object TryOps {
   /** Simple decorator for the `Array[Try[_]]` */
   implicit class ArrayTryOps[T](val trys: Array[Try[T]]) {
 
-    /** Flatten a `Array[Try[T]]` to a `Try[Array[T]]`, which is a failure if any if the Trys is a failure.
-     * In case of a failure, the latest `Failure` will be returned */
+    /**
+     * Flatten a `Array[Try[T]]` to a `Try[Array[T]]`, which is a failure if any if the Trys is a failure.
+     * In case of a failure, the latest `Failure` will be returned
+     */
     def allOkOrFail: Try[Traversable[T]] = TryUtils.allOkOrFail(trys)
 
     /** Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if ALL of the Trys is a failure. */

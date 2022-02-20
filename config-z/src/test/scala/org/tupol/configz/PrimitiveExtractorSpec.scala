@@ -3,26 +3,26 @@ package org.tupol.configz
 import com.typesafe.config.ConfigFactory
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import scalaz.{Failure => ZFailure}
+import scalaz.{ Failure => ZFailure }
 
-import java.sql.{Date, Timestamp}
-import java.time.{Duration, LocalDate, LocalDateTime}
+import java.sql.{ Date, Timestamp }
+import java.time.{ Duration, LocalDate, LocalDateTime }
 
 class PrimitiveExtractorSpec extends AnyFunSuite with Matchers {
 
   case class ComplexExample(
-    char: Character,
-    str: String,
-    bool: Boolean,
-    dbl: Double,
-    in: Int,
-    lng: Long,
-    optChar: Option[Character],
-    optStr: Option[String],
-    optBool: Option[Boolean],
-    optDouble: Option[Double],
-    optInt: Option[Int],
-    optLong: Option[Long]
+      char: Character,
+      str: String,
+      bool: Boolean,
+      dbl: Double,
+      in: Int,
+      lng: Long,
+      optChar: Option[Character],
+      optStr: Option[String],
+      optBool: Option[Boolean],
+      optDouble: Option[Double],
+      optInt: Option[Int],
+      optLong: Option[Long]
   )
 
   test("Extracting a String") {

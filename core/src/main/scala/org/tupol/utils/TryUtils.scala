@@ -25,11 +25,13 @@ package org.tupol.utils
 
 import scala.util.{ Failure, Success, Try }
 
-/** Explicit utility functions for working with `Try[T]` and `F[Try[T]]`*/
+/** Explicit utility functions for working with `Try[T]` and `F[Try[T]]` */
 object TryUtils {
 
-  /** Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if ANY of the Trys is a failure.
-   * In case of a failure, the latest `Failure` will be returned */
+  /**
+   * Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if ANY of the Trys is a failure.
+   * In case of a failure, the latest `Failure` will be returned
+   */
   def allOkOrFail[T](trys: Traversable[Try[T]]): Try[Traversable[T]] = {
     import scala.collection.immutable.Vector
     trys.foldLeft(Try(Vector.empty[T])) { (acc, tryField) =>
@@ -41,7 +43,7 @@ object TryUtils {
   def collectOkOrFail[T](trys: Traversable[Try[T]]): Try[Traversable[T]] =
     trys match {
       case Nil => Success(Nil)
-      case _ =>
+      case _   =>
         trys.collect { case Success(x) => x } match {
           case Nil => Failure(new Exception("Everything failed."))
           case col => Success(col)

@@ -88,6 +88,18 @@ lazy val core = (project in file("core"))
     publishArtifact in Test := true
   )
 
+lazy val jdbc = (project in file("jdbc"))
+  .enablePlugins(BuildInfoPlugin)
+  .settings(commonSettings: _*)
+  .settings(
+    name := "scala-utils-jdbc",
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+    buildInfoOptions := Seq[BuildInfoOption](BuildInfoOption.BuildTime, BuildInfoOption.ToMap, BuildInfoOption.ToJson),
+    buildInfoPackage := "org.tupol.utils.jdbc",
+    libraryDependencies ++= JdbcDependencies
+  )
+  .dependsOn(core % "test->test;compile->compile")
+
 lazy val config_z = (project in file("config-z"))
   .enablePlugins(BuildInfoPlugin)
   .settings(commonSettings: _*)
@@ -104,5 +116,5 @@ lazy val scala_utils = Project(
   id = "scala-utils",
   base = file(".")
 ).settings(commonSettings: _*)
-  .dependsOn(core % "test->test;compile->compile", config_z)
-  .aggregate(core, config_z)
+  .dependsOn(core % "test->test;compile->compile", jdbc, config_z)
+  .aggregate(core, jdbc, config_z)

@@ -68,9 +68,8 @@ object MyComplexExample extends Configurator[MyComplexExample] {
 
     val separatorSize = config
       .extract[Int]("separatorSize")
-      .ensure(new IllegalArgumentException("The separatorSize should be between 1 and 80.").toNel)(
-        s => s > 0 && s <= 80
-      )
+      .ensure(new IllegalArgumentException("The separatorSize should be between 1 and 80.").toNel)(s =>
+        s > 0 && s <= 80)
 
     config.extract[MySimpleExample] |@| separatorChar |@| separatorSize apply MyComplexExample.apply
   }
@@ -110,5 +109,6 @@ object MyComplexExampleDemo extends App {
                                                 |  separatorSize=81
                                                 |}
     """.stripMargin)
-  print(MyComplexExample.extract(wrongConfig.getConfig("myExample")).recover { case (t: Throwable) => t.getMessage }.get)
+  print(
+    MyComplexExample.extract(wrongConfig.getConfig("myExample")).recover { case (t: Throwable) => t.getMessage }.get)
 }

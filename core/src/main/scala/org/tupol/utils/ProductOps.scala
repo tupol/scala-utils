@@ -28,11 +28,12 @@ object ProductOps {
   implicit class ProductOfOptionsOps(product: Product) {
 
     /** Return true if this product contains only Option[_] and all of them are `None` */
-    def isEmpty: Boolean = product.productIterator.forall {
-      case None    => true
-      case Some(_) => false
-      case _       => false
-    }
+    def isEmpty: Boolean =
+      product.productIterator.forall {
+        case None    => true
+        case Some(_) => false
+        case _       => false
+      }
   }
 
 }
