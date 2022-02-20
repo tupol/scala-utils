@@ -22,35 +22,35 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
   "update" should {
     "return successfully" in {
       implicit val conn = mock[java.sql.Connection]
-      val stmt = mock[java.sql.Statement]
+      val stmt          = mock[java.sql.Statement]
       stmt.executeUpdate(*[String]) answers 123
       conn.createStatement answers stmt
       update("some sql stmt") shouldBe Success(123)
     }
     "return a SQLException if the statement can not be created due to a SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val exception = new SQLException("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val exception     = new SQLException("Something went wrong")
       conn.createStatement throws exception
       update("some sql stmt") shouldBe Failure(exception)
     }
     "return an Exception if the statement can not be created due to a non-SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val exception = new Exception("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val exception     = new Exception("Something went wrong")
       conn.createStatement throws exception
       update("some sql stmt") shouldBe Failure(exception)
     }
     "return a SQLException if the statement can not be executed due to a SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.Statement]
-      val exception = new SQLException("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.Statement]
+      val exception     = new SQLException("Something went wrong")
       stmt.executeUpdate(*[String]) throws exception
       conn.createStatement answers stmt
       update("some sql stmt") shouldBe Failure(exception)
     }
     "return an Exception if the statement can not be executed due to a non-SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.Statement]
-      val exception = new Exception("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.Statement]
+      val exception     = new Exception("Something went wrong")
       stmt.executeUpdate(*[String]) throws exception
       conn.createStatement answers stmt
       update("some sql stmt") shouldBe Failure(exception)
@@ -60,8 +60,8 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
   "query" should {
     "return successfully" in {
       implicit val conn = mock[java.sql.Connection]
-      val stmt = mock[java.sql.Statement]
-      val rs   = mock[java.sql.ResultSet]
+      val stmt          = mock[java.sql.Statement]
+      val rs            = mock[java.sql.ResultSet]
       rs.next answers true andThenAnswer false
       rs.getString(*[String]) answers ((_: String) => "some_value")
       stmt.executeQuery(*[String]) answers rs
@@ -70,29 +70,29 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
     }
 
     "return a SQLException if the statement can not be created due to a SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val exception = new SQLException("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val exception     = new SQLException("Something went wrong")
       conn.createStatement throws exception
       query("some sql stmt") shouldBe Failure(exception)
     }
     "return an Exception if the statement can not be created due to a non-SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val exception = new Exception("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val exception     = new Exception("Something went wrong")
       conn.createStatement throws exception
       query("some sql stmt") shouldBe Failure(exception)
     }
     "return a SQLException if the statement can not be executed due to a SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.Statement]
-      val exception = new SQLException("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.Statement]
+      val exception     = new SQLException("Something went wrong")
       stmt.executeQuery(*[String]) throws exception
       conn.createStatement answers stmt
       query("some sql stmt") shouldBe Failure(exception)
     }
     "return an Exception if the statement can not be executed due to a non-SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.Statement]
-      val exception = new Exception("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.Statement]
+      val exception     = new Exception("Something went wrong")
       stmt.executeQuery(*[String]) throws exception
       conn.createStatement answers stmt
       query("some sql stmt") shouldBe Failure(exception)
@@ -102,8 +102,8 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
   "queryCallable" should {
     "return successfully" in {
       implicit val conn = mock[java.sql.Connection]
-      val stmt = mock[java.sql.CallableStatement]
-      val rs   = mock[java.sql.ResultSet]
+      val stmt          = mock[java.sql.CallableStatement]
+      val rs            = mock[java.sql.ResultSet]
       rs.next answers true andThenAnswer false
       rs.getString(*[String]) answers ((_: String) => "some_value")
       stmt.executeQuery() answers rs
@@ -118,27 +118,27 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
     }
 
     "return a SQLException if the statement can not be created due to a SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.CallableStatement]
-      val exception = new SQLException("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.CallableStatement]
+      val exception     = new SQLException("Something went wrong")
       conn.prepareCall(*) throws exception
       queryCallable("some sql stmt", Seq()) shouldBe Failure(exception)
       stmt.close wasNever called
       conn.close wasNever called
     }
     "return an Exception if the statement can not be created due to a non-SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.CallableStatement]
-      val exception = new Exception("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.CallableStatement]
+      val exception     = new Exception("Something went wrong")
       conn.prepareCall(*) throws exception
       queryCallable("some sql stmt", Seq()) shouldBe Failure(exception)
       stmt.close wasNever called
       conn.close wasNever called
     }
     "return a SQLException if the statement can not be executed due to a SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.CallableStatement]
-      val exception = new SQLException("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.CallableStatement]
+      val exception     = new SQLException("Something went wrong")
       stmt.executeQuery() throws exception
       conn.prepareCall(*) answers stmt
       queryCallable("some sql stmt", Seq()) shouldBe Failure(exception)
@@ -146,10 +146,10 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
       conn.close wasNever called
     }
     "return an Exception if the statement can not be executed due to a non-SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.CallableStatement]
-      val rs        = mock[java.sql.ResultSet]
-      val exception = new Exception("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.CallableStatement]
+      val rs            = mock[java.sql.ResultSet]
+      val exception     = new Exception("Something went wrong")
       stmt.executeQuery() throws exception
       conn.prepareCall(*) answers stmt
       queryCallable("some sql stmt", Seq()) shouldBe Failure(exception)
@@ -162,8 +162,8 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
   "queryStatement" should {
     "return successfully" in {
       implicit val conn = mock[java.sql.Connection]
-      val stmt = mock[java.sql.PreparedStatement]
-      val rs   = mock[java.sql.ResultSet]
+      val stmt          = mock[java.sql.PreparedStatement]
+      val rs            = mock[java.sql.ResultSet]
       rs.next answers true andThenAnswer false
       rs.getString(*[String]) answers ((_: String) => "some_value")
       stmt.executeQuery() answers rs
@@ -178,27 +178,27 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
     }
 
     "return a SQLException if the statement can not be created due to a SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.PreparedStatement]
-      val exception = new SQLException("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.PreparedStatement]
+      val exception     = new SQLException("Something went wrong")
       conn.prepareStatement(*) throws exception
       queryStatement("some sql stmt", Seq()) shouldBe Failure(exception)
       stmt.close wasNever called
       conn.close wasNever called
     }
     "return an Exception if the statement can not be created due to a non-SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.PreparedStatement]
-      val exception = new Exception("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.PreparedStatement]
+      val exception     = new Exception("Something went wrong")
       conn.prepareStatement(*) throws exception
       queryStatement("some sql stmt", Seq()) shouldBe Failure(exception)
       stmt.close wasNever called
       conn.close wasNever called
     }
     "return a SQLException if the statement can not be executed due to a SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.PreparedStatement]
-      val exception = new SQLException("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.PreparedStatement]
+      val exception     = new SQLException("Something went wrong")
       stmt.executeQuery() throws exception
       conn.prepareStatement(*) answers stmt
       queryStatement("some sql stmt", Seq()) shouldBe Failure(exception)
@@ -206,10 +206,10 @@ class JdbcFunctionsSpec extends AnyWordSpec with Matchers with MockedResultSet {
       conn.close wasNever called
     }
     "return an Exception if the statement can not be executed due to a non-SqlException" in {
-      implicit val conn      = mock[java.sql.Connection]
-      val stmt      = mock[java.sql.PreparedStatement]
-      val rs        = mock[java.sql.ResultSet]
-      val exception = new Exception("Something went wrong")
+      implicit val conn = mock[java.sql.Connection]
+      val stmt          = mock[java.sql.PreparedStatement]
+      val rs            = mock[java.sql.ResultSet]
+      val exception     = new Exception("Something went wrong")
       stmt.executeQuery() throws exception
       conn.prepareStatement(*) answers stmt
       queryStatement("some sql stmt", Seq()) shouldBe Failure(exception)

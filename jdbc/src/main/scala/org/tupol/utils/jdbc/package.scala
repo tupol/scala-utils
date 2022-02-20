@@ -22,7 +22,7 @@ package object jdbc {
    * Executes a sql statement such as INSERT, UPDATE, DELETE, or DDL statement.
    * The accepted sql statements are the same as in `java.sql.Statement.executeUpdate`.
    */
-  def update(sql: String)(implicit connection: Connection) : Try[Int] =
+  def update(sql: String)(implicit connection: Connection): Try[Int] =
     Bracket.auto(connection.createStatement())(_.executeUpdate(sql))
 
   /** Executes a sql statement */
@@ -40,17 +40,18 @@ package object jdbc {
 
   /** Executes a prepared sql statement */
   def queryStatement[T](sql: String, params: Seq[SqlParam[_]] = Seq())(implicit
-                                                                      connection: Connection, extractor: RowExtractor[T]
+      connection: Connection,
+      extractor: RowExtractor[T]
   ): Try[Iterable[T]] =
     Bracket
       .auto(connection.prepareStatement(sql)) { stmt =>
         for {
           _      <- params.zipWithIndex.map { case (param, index) => param.set(stmt, index + 1) }.allOkOrFail
           result <- Bracket
-            .auto(stmt.executeQuery()) { rs =>
-              rs.toIterator.map(rs => rs.extract[T]).toIterable.allOkOrFail
-            }
-            .flatten
+                      .auto(stmt.executeQuery()) { rs =>
+                        rs.toIterator.map(rs => rs.extract[T]).toIterable.allOkOrFail
+                      }
+                      .flatten
         } yield result
       }
       .flatten
@@ -58,7 +59,8 @@ package object jdbc {
 
   /** Executes a callable sql statement */
   def queryCallable[T](sql: String, params: Seq[SqlParam[_]] = Seq())(implicit
-                       connection: Connection, extractor: RowExtractor[T]
+      connection: Connection,
+      extractor: RowExtractor[T]
   ): Try[Iterable[T]] =
     Bracket
       .auto(connection.prepareCall(sql)) { stmt =>

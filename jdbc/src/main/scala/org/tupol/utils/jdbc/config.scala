@@ -12,11 +12,11 @@ object config {
    * @param pass
    */
   case class JdbcConfig(
-                         uri: URI,
-                         schema: Option[String],
-                         user: Option[String],
-                         pass: Option[String]
-                       )
+      uri: URI,
+      schema: Option[String],
+      user: Option[String],
+      pass: Option[String]
+  )
 
   /**
    * Connection pool configuration class
@@ -56,20 +56,20 @@ object config {
    *                          treated as a failed connection attempt.
    */
   case class ConnectionPoolConfig(
-                                   jdbc: JdbcConfig,
-                                   poolName: String,
-                                   connectionTimeout: Option[Duration] = None,
-                                   validationTimeout: Option[Duration] = None,
-                                   idleTimeout: Option[Duration] = None,
-                                   leakDetectionThreshold: Option[Duration] = Some(Duration(3, MINUTES)),
-                                   maxLifetime: Option[Duration] = None,
-                                   minimumIdle: Option[Int] = None,
-                                   maximumPoolSize: Option[Int] = None,
-                                   transactionIsolation: Option[String] = Some("TRANSACTION_READ_COMMITTED"),
-                                   connectionTestQuery: Option[String] = None,
-                                   dataSourceClassName: Option[String] = None,
-                                   autoCommit: Option[Boolean] = None,
-                                   readOnly: Option[Boolean] = None,
-                                   connectionInitSql: Option[String] = None
-                                 )
+      jdbc: JdbcConfig,
+      poolName: String,
+      connectionTimeout: Option[Duration] = None,
+      validationTimeout: Option[Duration] = None,
+      idleTimeout: Option[Duration] = None,
+      leakDetectionThreshold: Option[Duration] = Some(Duration(3, MINUTES)),
+      maxLifetime: Option[Duration] = None,
+      minimumIdle: Option[Int] = None,
+      maximumPoolSize: Option[Int] = None,
+      transactionIsolation: Option[String] = Some("TRANSACTION_READ_COMMITTED"),
+      connectionTestQuery: Option[String] = None,
+      dataSourceClassName: Option[String] = None,
+      autoCommit: Option[Boolean] = None,
+      readOnly: Option[Boolean] = None,
+      connectionInitSql: Option[String] = None
+  )
 }
