@@ -23,3 +23,8 @@ results as well as the location of the generated detailed reports.
 [info] Aggregation complete. Coverage was [85.25]
 [info] All done. Coverage was [85.25%]
 ```
+
+## Scala Formatting
+
+Scala formatting is done based on the `scalafmt` plugin.
+

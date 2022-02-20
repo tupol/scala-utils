@@ -22,6 +22,10 @@ object Dependencies {
 
   val CoreDependencies: Seq[ModuleID] = CoreTestDependencies ++ Seq()
 
+
+  val JdbcDependencies: Seq[ModuleID] = Seq(
+  )
+
   val ConfigZDependencies: Seq[ModuleID] = Seq(
     "com.typesafe.scala-logging" % "scala-logging" % Versions.scala_logging cross CrossVersion.binary,
     "org.scala-lang" % "scala-reflect" % Versions.scala,

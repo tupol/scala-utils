@@ -56,7 +56,10 @@ Some `config-z` usage examples can be found under [`config-z/src/test/scala/exam
 
 ## What's new?
 
-**1.1.0-SNAPSHOT**
+**1.1.1-SNAPSHOT**
+- Added an experimental `jdbc` module
+
+**1.1.0**
   - Refactored the `configz` module
   - Added a few more utility implicits to the `core` module
 
