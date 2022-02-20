@@ -1,12 +1,11 @@
 package org.tupol.utils.tmp
 
-
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 import scala.collection.mutable.ArrayBuffer
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 class TryOpsSpec extends AnyFunSuite with Matchers with ScalaFutures {
 
@@ -151,8 +150,8 @@ class TryOpsSpec extends AnyFunSuite with Matchers with ScalaFutures {
   }
 
   test("Array.collectOkOrFail yields a Failure") {
-    val ex1 = new Exception("ex1")
-    val ex2 = new Exception("ex2")
+    val ex1    = new Exception("ex1")
+    val ex2    = new Exception("ex2")
     // Interesting behavior for Array[Failure[_]]; for later study
     val result = Array(Try[Any](throw ex1), Try[Any](throw ex2)).collectOkOrFail
     result shouldBe a[Failure[_]]

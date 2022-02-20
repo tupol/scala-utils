@@ -1,12 +1,11 @@
 package org.tupol.utils.jdbc
 
-
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.tupol.utils.jdbc.extractors.RowExtractor
 
-import java.sql.{Connection, ResultSet, SQLException}
-import scala.util.{Failure, Success, Try}
+import java.sql.{ Connection, ResultSet, SQLException }
+import scala.util.{ Failure, Success, Try }
 
 object JdbcFunctionsSpec {
 

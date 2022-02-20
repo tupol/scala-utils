@@ -30,7 +30,7 @@ class StringToRangeProp extends Properties("Range") with Matchers {
   property("commons#parseStringToRange - throws BadValue for start values greater than stop values") =
     forAll(positiveInts) { (i: Int) =>
       val input = s"${i + 1}, $i, 1"
-      val ex = intercept[BadValue] {
+      val ex    = intercept[BadValue] {
         parseStringToRange(input, "somePath").get
       }
       ex.isInstanceOf[BadValue]
@@ -39,7 +39,7 @@ class StringToRangeProp extends Properties("Range") with Matchers {
   property("commons#parseStringToRange - throws BadValue for negative steps") = forAll(positiveInts, negativeInts) {
     (i: Int, s: Int) =>
       val input = s"$i, ${i + 1}, $s"
-      val ex = intercept[BadValue] {
+      val ex    = intercept[BadValue] {
         parseStringToRange(input, "somePath").get
       }
       ex.isInstanceOf[BadValue]
@@ -47,7 +47,7 @@ class StringToRangeProp extends Properties("Range") with Matchers {
 
   property("commons#parseStringToRange - throws BadValue for any string") = forAll { (input: String) =>
     val badInput = s"_;@#* $input;@#*&"
-    val ex = intercept[BadValue] {
+    val ex       = intercept[BadValue] {
       parseStringToRange(input, "somePath").get
     }
     ex.isInstanceOf[BadValue]

@@ -29,7 +29,7 @@ import scala.util.Try
 /** Package wide implicits */
 object implicits {
 
-  implicit class TryOpsImplicits[T](override val attempt: Try[T]) extends TryOps.TryOps[T](attempt)
+  implicit class TryOpsImplicits[T](override val attempt: Try[T])          extends TryOps.TryOps[T](attempt)
   implicit class TraversableTryOpsImplicits[T](override val trys: Traversable[Try[T]])
       extends TryOps.TraversableTryOps[T](trys)
   implicit class ArrayTryOpsImplicits[T](override val trys: Array[Try[T]]) extends TryOps.ArrayTryOps[T](trys)

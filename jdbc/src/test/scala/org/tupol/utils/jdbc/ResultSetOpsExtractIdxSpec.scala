@@ -1,6 +1,5 @@
 package org.tupol.utils.jdbc
 
-
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -195,14 +194,14 @@ class ResultSetOpsExtractIdxSpec extends AnyWordSpec with Matchers with MockedRe
       rs.toIterator.isEmpty shouldBe true
     }
     "return an Iterator of one element if the ResultSet has one element" in {
-      val rs = mock[ResultSet]
+      val rs     = mock[ResultSet]
       rs.next answers true andThenAnswer false
       rs.getString(*[Int]) answers "a1"
       val result = rs.toIterator.toIndexedSeq
       result.map(_.extract[String](1)) shouldBe Seq(Success("a1"))
     }
     "return an Iterator of one element if the ResultSet has two elements" in {
-      val rs = mock[ResultSet]
+      val rs     = mock[ResultSet]
       rs.next answers true andThenAnswer true andThenAnswer false
       rs.getString(*[Int]) answers "a1" andThenAnswer "a2"
       val result = rs.toIterator.toIndexedSeq
@@ -210,7 +209,7 @@ class ResultSetOpsExtractIdxSpec extends AnyWordSpec with Matchers with MockedRe
       result.map(_.extract[String](1)) shouldBe Seq(Success("a1"), Success("a2"))
     }
     "returns the same iterator after multiple hasNext calls" in {
-      val rs = mock[ResultSet]
+      val rs     = mock[ResultSet]
       rs.next answers true andThenAnswer true andThenAnswer false
       rs.getString(*[Int]) answers "a1" andThenAnswer "a2"
       val result = rs.toIterator
@@ -219,7 +218,7 @@ class ResultSetOpsExtractIdxSpec extends AnyWordSpec with Matchers with MockedRe
       result.toIndexedSeq.map(_.extract[String](1)) shouldBe Seq(Success("a1"), Success("a2"))
     }
     "return an Iterator of result set groups" in {
-      val rs = mock[ResultSet]
+      val rs     = mock[ResultSet]
       rs.next answers true andThenAnswer true andThenAnswer false
       rs.getString(*[Int]) answers "a1" andThenAnswer "a2"
       val result = rs.toIterator.map(_.extract[String](1)).grouped(1).toIndexedSeq

@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package org.tupol.utils
 
-/** Implicit decorator functions for `Either[A, B]` and `F[Either[A, B]]`*/
+/** Implicit decorator functions for `Either[A, B]` and `F[Either[A, B]]` */
 object EitherOps {
 
   /** Simple decorator for the `Traversable[Either[A, B]]` */

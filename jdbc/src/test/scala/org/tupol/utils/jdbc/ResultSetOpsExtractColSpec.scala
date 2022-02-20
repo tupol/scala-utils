@@ -1,6 +1,5 @@
 package org.tupol.utils.jdbc
 
-
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -195,7 +194,7 @@ class ResultSetOpsExtractColSpec extends AnyWordSpec with Matchers with MockedRe
       rs.toIterator.isEmpty shouldBe true
     }
     "return an Iterator of one element if the ResultSet has one element" in {
-      val rs = mock[ResultSet]
+      val rs     = mock[ResultSet]
       rs.next answers true andThenAnswer false
       rs.getString(*[String]) answers "a1"
       val result = rs.toIterator.toSeq
@@ -203,7 +202,7 @@ class ResultSetOpsExtractColSpec extends AnyWordSpec with Matchers with MockedRe
       result.map(_.extract[String]("")) shouldBe Seq(Success("a1"))
     }
     "return an Iterator of one element if the ResultSet has two elements" in {
-      val rs = mock[ResultSet]
+      val rs     = mock[ResultSet]
       rs.next answers true andThenAnswer true andThenAnswer false
       rs.getString(*[String]) answers "a1" andThenAnswer "a2"
       val result = rs.toIterator.toSeq

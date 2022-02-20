@@ -1,26 +1,26 @@
 package org.tupol.configz
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{ Config, ConfigFactory }
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import scalaz.syntax.applicative._
-import scalaz.{ValidationNel, Failure => ZFailure}
+import scalaz.{ ValidationNel, Failure => ZFailure }
 
 class MapExtractorSpec extends AnyFunSuite with Matchers {
 
   case class ComplexExample(
-    char: Character,
-    str: String,
-    bool: Boolean,
-    dbl: Double,
-    in: Int,
-    lng: Long,
-    optChar: Option[Character],
-    optStr: Option[String],
-    optBool: Option[Boolean],
-    optDouble: Option[Double],
-    optInt: Option[Int],
-    optLong: Option[Long]
+      char: Character,
+      str: String,
+      bool: Boolean,
+      dbl: Double,
+      in: Int,
+      lng: Long,
+      optChar: Option[Character],
+      optStr: Option[String],
+      optBool: Option[Boolean],
+      optDouble: Option[Double],
+      optInt: Option[Int],
+      optLong: Option[Long]
   )
 
   case class CustomConf(prop1: Int, prop2: Seq[Long])

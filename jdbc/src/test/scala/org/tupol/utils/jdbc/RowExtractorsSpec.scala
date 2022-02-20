@@ -1,14 +1,13 @@
 package org.tupol.utils.jdbc
 
-
-import java.sql.{ResultSet, SQLException, Timestamp}
+import java.sql.{ ResultSet, SQLException, Timestamp }
 import java.time.LocalDateTime
 import java.util.UUID
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.{ ArgumentMatchersSugar, IdiomaticMockito }
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-import scala.util.{Success, Try}
+import scala.util.{ Success, Try }
 
 class RowExtractorsSpec extends AnyWordSpec with Matchers with IdiomaticMockito with ArgumentMatchersSugar {
 

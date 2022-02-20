@@ -7,9 +7,9 @@ class UtilsSpec extends AnyWordSpec with Matchers {
 
   "timeCode" should {
     "return the approximate length of the computation in millis" in {
-      val expectedResultMillis = 10
+      val expectedResultMillis   = 10
       val expectedDurationMillis = 200
-      val (result, duration) = timeCode {
+      val (result, duration)     = timeCode {
         Thread.sleep(expectedDurationMillis);
         10
       }

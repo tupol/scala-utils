@@ -3,8 +3,8 @@ package org.tupol.utils.jdbc
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-import java.sql.{Connection, PreparedStatement}
-import java.time.{LocalDate, LocalDateTime, LocalTime}
+import java.sql.{ Connection, PreparedStatement }
+import java.time.{ LocalDate, LocalDateTime, LocalTime }
 import java.util.UUID
 
 class SqlParamSpec extends AnyWordSpec with Matchers with MockedResultSet {

@@ -1,29 +1,29 @@
 package org.tupol.utils.jdbc
 
-import org.mockito.{ArgumentMatchersSugar, IdiomaticMockito}
+import org.mockito.{ ArgumentMatchersSugar, IdiomaticMockito }
 
-import java.sql.{Date, ResultSet, SQLException, Time, Timestamp}
-import java.time.{LocalDate, LocalDateTime, LocalTime}
+import java.sql.{ Date, ResultSet, SQLException, Time, Timestamp }
+import java.time.{ LocalDate, LocalDateTime, LocalTime }
 import java.util.UUID
 
 trait MockedResultSet extends IdiomaticMockito with ArgumentMatchersSugar {
 
-  val (string_col, string_col_idx, string_val) = ("string_col", 1, "some simple string")
-  val (byte_col, byte_col_idx, byte_val)       = ("byte_col", 2, Byte.MaxValue)
-  val (bytes_col, bytes_col_idx, bytes_val)    = ("bytes_col", 3, "abc".getBytes)
-  val (short_col, short_col_idx, short_val)    = ("short_col", 4, Short.MaxValue)
-  val (int_col, int_col_idx, int_val)          = ("int_col", 5, Int.MaxValue)
-  val (long_col, long_col_idx, long_val)       = ("long_col", 6, Long.MaxValue)
-  val (true_col, true_col_idx, true_val)       = ("true_col", 7, true)
-  val (false_col, false_col_idx, false_val)    = ("false_col", 8, false)
-  val (float_col, float_col_idx, float_val)    = ("float_col", 9, Float.MaxValue)
-  val (double_col, double_col_idx, double_val) = ("double_col", 10, Double.MaxValue)
-  val (date_col, date_col_idx, date_val)       = ("date_col", 11, java.sql.Date.valueOf(LocalDate.of(1970, 12, 31)))
-  val (time_col, time_col_idx, time_val)       = ("time_col", 12, java.sql.Time.valueOf(LocalTime.of(23, 59, 48)))
+  val (string_col, string_col_idx, string_val)          = ("string_col", 1, "some simple string")
+  val (byte_col, byte_col_idx, byte_val)                = ("byte_col", 2, Byte.MaxValue)
+  val (bytes_col, bytes_col_idx, bytes_val)             = ("bytes_col", 3, "abc".getBytes)
+  val (short_col, short_col_idx, short_val)             = ("short_col", 4, Short.MaxValue)
+  val (int_col, int_col_idx, int_val)                   = ("int_col", 5, Int.MaxValue)
+  val (long_col, long_col_idx, long_val)                = ("long_col", 6, Long.MaxValue)
+  val (true_col, true_col_idx, true_val)                = ("true_col", 7, true)
+  val (false_col, false_col_idx, false_val)             = ("false_col", 8, false)
+  val (float_col, float_col_idx, float_val)             = ("float_col", 9, Float.MaxValue)
+  val (double_col, double_col_idx, double_val)          = ("double_col", 10, Double.MaxValue)
+  val (date_col, date_col_idx, date_val)                = ("date_col", 11, java.sql.Date.valueOf(LocalDate.of(1970, 12, 31)))
+  val (time_col, time_col_idx, time_val)                = ("time_col", 12, java.sql.Time.valueOf(LocalTime.of(23, 59, 48)))
   val (timestamp_col, timestamp_col_idx, timestamp_val) =
     ("timestamp_col", 13, java.sql.Timestamp.valueOf(LocalDateTime.of(date_val.toLocalDate, time_val.toLocalTime)))
-  val (uuid_col, uuid_col_idx, uuid_val)             = ("uuid_col", 14, UUID.randomUUID())
-  val (non_uuid_col, non_uuid_col_idx, non_uuid_val) = ("non_uuid_col", 15, "")
+  val (uuid_col, uuid_col_idx, uuid_val)                = ("uuid_col", 14, UUID.randomUUID())
+  val (non_uuid_col, non_uuid_col_idx, non_uuid_val)    = ("non_uuid_col", 15, "")
 
   val sqlException = new SQLException("SQLException")
 

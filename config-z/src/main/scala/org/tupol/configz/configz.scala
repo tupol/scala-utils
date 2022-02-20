@@ -23,18 +23,18 @@ SOFTWARE.
  */
 package org.tupol
 
-import com.typesafe.config.ConfigException.{BadValue, Missing}
-import com.typesafe.config.{Config, ConfigObject}
+import com.typesafe.config.ConfigException.{ BadValue, Missing }
+import com.typesafe.config.{ Config, ConfigObject }
 import org.tupol.utils.implicits._
 import scalaz.syntax.validation._
-import scalaz.{NonEmptyList, ValidationNel}
+import scalaz.{ NonEmptyList, ValidationNel }
 
-import java.sql.{Date, Timestamp}
-import java.time.{Duration, LocalDate, LocalDateTime}
+import java.sql.{ Date, Timestamp }
+import java.time.{ Duration, LocalDate, LocalDateTime }
 import java.util
 import scala.annotation.implicitNotFound
 import scala.collection.JavaConverters._
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 /**
  * This package holds a framework for extracting configuration objects out of configuration files, using the
@@ -84,12 +84,13 @@ package object configz {
     def extract[T: Extractor](path: String): ValidationNel[Throwable, T] =
       tryExtraction(Extractor[T].extract(config, path))
 
-    private def tryExtraction[T](extract: => Try[T]): ValidationNel[Throwable, T] = extract match {
-      case Success(value)                => value.success
-      case Failure(exception: Throwable) => exception.failureNel
-    }
+    private def tryExtraction[T](extract: => Try[T]): ValidationNel[Throwable, T] =
+      extract match {
+        case Success(value)                => value.success
+        case Failure(exception: Throwable) => exception.failureNel
+      }
 
-    def extract[T: Extractor]: ValidationNel[Throwable, T] = tryExtraction(Extractor[T].extract(config))
+    def extract[T: Extractor]: ValidationNel[Throwable, T]           = tryExtraction(Extractor[T].extract(config))
     def validatePath(path: String): ValidationNel[Throwable, String] =
       if (config.hasPath(path)) path.successNel
       else (new Missing(path): Throwable).failureNel
@@ -108,10 +109,11 @@ package object configz {
    * us to keep the Validation logic contained in configuration code, keeping the rest of our code scalaz agnostic.
    */
   import scala.language.implicitConversions
-  implicit def validationNelToTry[E <: Throwable, T](validation: ValidationNel[E, T]): Try[T] = validation match {
-    case scalaz.Failure(exceptions) => Failure(ConfigurationException(exceptions.list.toList))
-    case scalaz.Success(value)      => Success(value)
-  }
+  implicit def validationNelToTry[E <: Throwable, T](validation: ValidationNel[E, T]): Try[T] =
+    validation match {
+      case scalaz.Failure(exceptions) => Failure(ConfigurationException(exceptions.list.toList))
+      case scalaz.Success(value)      => Success(value)
+    }
 
   /**
    * Encapsulates all configuration exceptions that occurred while trying to map
@@ -163,7 +165,7 @@ package object configz {
       def extract(config: Config, path: String): Try[Timestamp] = Try(Timestamp.valueOf(config.getString(path)))
     }
 
-    /** Expected format: <code>yyyy-[m]m-[d]d</code>*/
+    /** Expected format: <code>yyyy-[m]m-[d]d</code> */
     implicit val dateExtractor = new Extractor[Date] {
       def extract(config: Config, path: String): Try[Date] = Try(Date.valueOf(config.getString(path)))
     }
@@ -217,20 +219,24 @@ package object configz {
      * @tparam T the extracted value
      * @return A Seq(T) if we can extract a valid property of the given type or throw an Exception
      */
-    implicit def listExtractor[T](implicit extractor: Extractor[T]): Extractor[Seq[T]] = new Extractor[Seq[T]] {
-      override def extract(config: Config, path: String): Try[Seq[T]] = {
-        def fromObjects =
-          Seq(config.getObjectList(path).asScala: _*)
-            .map(co => extractor.extract(co.toConfig.atPath(path), path)).allOkOrFail
-        def fromConfigs =
-          Seq(config.getConfigList(path).asScala: _*)
-            .map(co => extractor.extract(co.atPath(path), path)).allOkOrFail
-        def fromList =
-          Seq(config.getList(path).asScala: _*)
-            .map(co => extractor.extract(co.atPath(path), path)).allOkOrFail
-        (fromList orElse fromConfigs orElse fromObjects).map(_.toSeq)
+    implicit def listExtractor[T](implicit extractor: Extractor[T]): Extractor[Seq[T]] =
+      new Extractor[Seq[T]] {
+        override def extract(config: Config, path: String): Try[Seq[T]] = {
+          def fromObjects =
+            Seq(config.getObjectList(path).asScala: _*)
+              .map(co => extractor.extract(co.toConfig.atPath(path), path))
+              .allOkOrFail
+          def fromConfigs =
+            Seq(config.getConfigList(path).asScala: _*)
+              .map(co => extractor.extract(co.atPath(path), path))
+              .allOkOrFail
+          def fromList    =
+            Seq(config.getList(path).asScala: _*)
+              .map(co => extractor.extract(co.atPath(path), path))
+              .allOkOrFail
+          (fromList orElse fromConfigs orElse fromObjects).map(_.toSeq)
+        }
       }
-    }
 
     implicit val anyMapExtractor = new Extractor[Map[String, Any]] {
       def extract(config: Config, path: String): Try[Map[String, Any]] = {
@@ -243,11 +249,12 @@ package object configz {
               .map(e => (e.getKey, e.getValue.unwrapped.asInstanceOf[Any]))
               .toSeq: _*
           )
-        def fromObjects: Seq[(String, Any)] = (config.getObjectList(path).asScala).flatMap(fromObject(_))
-        def fromList: Seq[(String, Any)] = Seq(config.getList(path).asScala: _*).flatMap { co =>
-          val kv = co.unwrapped.asInstanceOf[util.HashMap[_, _]].asScala.toSeq
-          kv.map { case (k, v) => (k.toString, v.asInstanceOf[Any]) }
-        }
+        def fromObjects: Seq[(String, Any)]                 = (config.getObjectList(path).asScala).flatMap(fromObject(_))
+        def fromList: Seq[(String, Any)]                    =
+          Seq(config.getList(path).asScala: _*).flatMap { co =>
+            val kv = co.unwrapped.asInstanceOf[util.HashMap[_, _]].asScala.toSeq
+            kv.map { case (k, v) => (k.toString, v.asInstanceOf[Any]) }
+          }
         (Try(fromList) orElse Try(fromObject(config.getObject(path))) orElse Try(fromObjects)).map(_.toMap)
       }
     }
@@ -287,15 +294,17 @@ package object configz {
       new Extractor[Map[String, T]] {
         def extract(config: Config, path: String): Try[Map[String, T]] = {
           def fromObject(o: ConfigObject): Try[Map[String, T]] =
-              config
-                .getObject(path)
-                .entrySet
-                .asScala
-                .map(e => extractor.extract(e.getValue.atPath(e.getKey), e.getKey).map((e.getKey, _)))
-                .allOkOrFail
-                .map(_.toMap)
+            config
+              .getObject(path)
+              .entrySet
+              .asScala
+              .map(e => extractor.extract(e.getValue.atPath(e.getKey), e.getKey).map((e.getKey, _)))
+              .allOkOrFail
+              .map(_.toMap)
 
-          def fromObjects: Try[Map[String, T]] = Try(config.getObjectList(path).asScala).flatMap(obs => obs.map(fromObject(_)).allOkOrFail.map(_.flatten.toMap))
+          def fromObjects: Try[Map[String, T]] =
+            Try(config.getObjectList(path).asScala).flatMap(obs =>
+              obs.map(fromObject(_)).allOkOrFail.map(_.flatten.toMap))
           (fromObject(config.getObject(path)) orElse fromObjects)
         }
       }
@@ -320,19 +329,20 @@ package object configz {
         Try(value.split(",").map(_.trim.toInt).toSeq) match {
           case Success(start +: stop +: _ +: Nil) if start > stop =>
             Failure(new BadValue(path, "The start should be smaller than the stop."))
-          case Success(_ +: _ +: step +: Nil) if step < 0 =>
-            Failure( new BadValue(path, "The step should be a positive number."))
-          case Success(start +: stop +: step +: Nil) =>
+          case Success(_ +: _ +: step +: Nil) if step < 0         =>
+            Failure(new BadValue(path, "The step should be a positive number."))
+          case Success(start +: stop +: step +: Nil)              =>
             Success(start to stop by step)
-          case Success(v +: Nil) =>
+          case Success(v +: Nil)                                  =>
             Success(v to v)
-          case _ =>
-            Failure(new BadValue(
-              path,
-              "The input should contain either an integer or a comma separated list of 3 integers."
-            ))
+          case _                                                  =>
+            Failure(
+              new BadValue(
+                path,
+                "The input should contain either an integer or a comma separated list of 3 integers."
+              ))
         }
-      def extract(config: Config, path: String): Try[Range] = parseStringToRange(config.getString(path), path)
+      def extract(config: Config, path: String): Try[Range]                       = parseStringToRange(config.getString(path), path)
     }
 
     /**
@@ -342,12 +352,14 @@ package object configz {
      * @tparam T the extracted value
      * @return A Some(T) if we can extract a valid property of the given type or a None otherwise.
      */
-    implicit def optionExtractor[T](implicit extractor: Extractor[T]): Extractor[Option[T]] = new Extractor[Option[T]] {
-      override def extract(config: Config, path: String): Try[Option[T]] = extractor.extract(config, path) match {
-        case Success(value) => Success(Some(value))
-        case Failure(_)     => Success(None)
+    implicit def optionExtractor[T](implicit extractor: Extractor[T]): Extractor[Option[T]] =
+      new Extractor[Option[T]] {
+        override def extract(config: Config, path: String): Try[Option[T]] =
+          extractor.extract(config, path) match {
+            case Success(value) => Success(Some(value))
+            case Failure(_)     => Success(None)
+          }
       }
-    }
 
     /**
      * Extract an Either[A, B] for every A or B that we've defined an extractor for.
@@ -358,13 +370,14 @@ package object configz {
      * @tparam B the extracted Right value
      * @return A Left(A) if we could extract the A type, or a Right(B) if we could extract the right type or throw an Exception
      */
-    implicit def eitherExtractor[A, B](
-      implicit leftExtractor: Extractor[A],
-      rightExtractor: Extractor[B]
-    ): Extractor[Either[A, B]] = new Extractor[Either[A, B]] {
-      override def extract(config: Config, path: String): Try[Either[A, B]] =
-        (leftExtractor.extract(config, path)).map(Left(_)) orElse (rightExtractor.extract(config, path)).map(Right(_))
-    }
+    implicit def eitherExtractor[A, B](implicit
+        leftExtractor: Extractor[A],
+        rightExtractor: Extractor[B]
+    ): Extractor[Either[A, B]] =
+      new Extractor[Either[A, B]] {
+        override def extract(config: Config, path: String): Try[Either[A, B]] =
+          (leftExtractor.extract(config, path)).map(Left(_)) orElse (rightExtractor.extract(config, path)).map(Right(_))
+      }
 
   }
 

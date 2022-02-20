@@ -3,7 +3,7 @@ package org.tupol.configz
 import com.typesafe.config.ConfigFactory
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import scalaz.{Failure => ZFailure, Success => ZSuccess}
+import scalaz.{ Failure => ZFailure, Success => ZSuccess }
 
 class RichConfigSpec extends AnyFunSuite with Matchers {
 

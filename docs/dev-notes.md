@@ -28,3 +28,7 @@ results as well as the location of the generated detailed reports.
 
 Scala formatting is done based on the `scalafmt` plugin.
 
+```bash
+sbt scalafmtAll
+```
+

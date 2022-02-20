@@ -1,10 +1,10 @@
 package org.tupol.configz
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{ Config, ConfigFactory }
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import scalaz.syntax.applicative._
-import scalaz.{ValidationNel, Failure => ZFailure}
+import scalaz.{ ValidationNel, Failure => ZFailure }
 
 class SeqExtractorSpec extends AnyFunSuite with Matchers {
 
