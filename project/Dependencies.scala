@@ -12,6 +12,9 @@ object Dependencies {
     val scala_logging    = "3.9.2"
     val mockito          = "1.14.4"
     val typesafe_config  = "1.4.0"
+    val postgresql       = "42.2.+"
+    val testcontainers   = "1.16.+"
+    val hikari           = "3.4.+"
   }
 
   val CoreTestDependencies: Seq[ModuleID] = Seq(
@@ -24,6 +27,9 @@ object Dependencies {
 
 
   val JdbcDependencies: Seq[ModuleID] = Seq(
+    "com.zaxxer"            % "HikariCP"    % Versions.hikari         % Provided,
+    "org.testcontainers"    % "postgresql"  % Versions.testcontainers % Test,
+    "org.postgresql"        % "postgresql"  % Versions.postgresql     % Test,
   )
 
   val ConfigZDependencies: Seq[ModuleID] = Seq(
