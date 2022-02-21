@@ -56,7 +56,11 @@ Some `config-z` usage examples can be found under [`config-z/src/test/scala/exam
 
 ## What's new?
 
-**1.1.1-SNAPSHOT**
+**1.1.2**
+- `jdbc` module - added `PreparedStatement` support
+- `jdbc` module - added configuration and `ConnectionPool` support
+
+**1.1.1**
 - Added an experimental `jdbc` module
 
 **1.1.0**
