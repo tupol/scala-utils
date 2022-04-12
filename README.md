@@ -4,9 +4,9 @@
 [![GitHub](https://img.shields.io/github/license/tupol/scala-utils.svg)](https://github.com/tupol/scala-utils/blob/master/LICENSE) &nbsp; 
 [![Travis (.org)](https://img.shields.io/travis/tupol/scala-utils.svg)](https://travis-ci.com/tupol/scala-utils) &nbsp; 
 [![Codecov](https://img.shields.io/codecov/c/github/tupol/scala-utils.svg)](https://codecov.io/gh/tupol/scala-utils) &nbsp;
-[![Javadocs](https://www.javadoc.io/badge/org.tupol/scala-utils_2.12.svg)](https://www.javadoc.io/doc/org.tupol/scala-utils_2.12)
-[![Gitter](https://badges.gitter.im/scala-utils/community.svg)](https://gitter.im/scala-utils/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) &nbsp; 
-[![Twitter](https://img.shields.io/twitter/url/https/_tupol.svg?color=%2317A2F2)](https://twitter.com/_tupol) &nbsp; 
+[![Javadocs](https://www.javadoc.io/badge/org.tupol/scala-utils_2.12.svg)](https://www.javadoc.io/doc/org.tupol/scala-utils_2.12) &nbsp;
+[![Discord](https://img.shields.io/discord/963384629572812860)](https://discord.gg/kDFsJ3y7Du) &nbsp;
+[![Twitter](https://img.shields.io/twitter/url/https/_tupol.svg?color=%2317A2F2)](https://twitter.com/_tupol) &nbsp;
 
 ## Description
 
