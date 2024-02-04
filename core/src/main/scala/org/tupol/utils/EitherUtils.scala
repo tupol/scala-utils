@@ -27,14 +27,14 @@ package org.tupol.utils
 object EitherUtils {
 
   /** The last Left prevails (if any), otherwise all Right-s collected in order of occurrence (possibly empty). */
-  def flatten[A, B](eithers: Traversable[Either[A, B]]): Either[A, Traversable[B]] = {
+  def flatten[A, B](eithers: Iterable[Either[A, B]]): Either[A, Iterable[B]] = {
     val (lefts, rights) = separate(eithers)
     if (lefts.isEmpty) Right(rights)
     else Left(lefts.last)
   }
 
   /** Partitions a sequence of Either-s into their left and right elements, similar to Haskell's `partitionEithers` */
-  def separate[A, B](eithers: Traversable[Either[A, B]]): (Traversable[A], Traversable[B]) = {
+  def separate[A, B](eithers: Iterable[Either[A, B]]): (Iterable[A], Iterable[B]) = {
     import scala.collection.immutable.Vector
     eithers.foldLeft((Vector.empty[A], Vector.empty[B]))((acc, x) =>
       x match {
@@ -44,11 +44,11 @@ object EitherUtils {
   }
 
   /** All left elements from a sequence of Either-s */
-  def lefts[A, B](eithers: Traversable[Either[A, B]]): Traversable[A]  =
+  def lefts[A, B](eithers: Iterable[Either[A, B]]): Iterable[A]  =
     eithers collect { case Left(l) => l }
 
   /** All right elements from a sequence of Either-s */
-  def rights[A, B](eithers: Traversable[Either[A, B]]): Traversable[B] =
+  def rights[A, B](eithers: Iterable[Either[A, B]]): Iterable[B] =
     eithers collect { case Right(r) => r }
 
 }

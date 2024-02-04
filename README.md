@@ -8,23 +8,20 @@
 [![Discord](https://img.shields.io/discord/963384629572812860)](https://discord.gg/kDFsJ3y7Du) &nbsp;
 [![Twitter](https://img.shields.io/twitter/url/https/_tupol.svg?color=%2317A2F2)](https://twitter.com/_tupol) &nbsp;
 
+
 ## Description
 
 This project contains some basic utilities that can help setting up a Scala project.
 
 The main utilities available:
-- [Configuration framework](config-z/docs/configuration-framework.md)
 - Conversion to byte array in the [`byteable`](core/src/main/scala/org/tupol/utils/ByteableOps.scala) package.
 - `Try`, `Future`, `Either`, `Product`, `Map` and other utilities in the [`utils`](core/src/main/scala/org/tupol/utils/) package.
 
-***Attention!*** The [Configuration framework](config-z/docs/configuration-framework.md) might be
- deprecated, as the [PureConfig](https://pureconfig.github.io/) framework is much more mature and
-  provides a better overall solution.
 
 ## Prerequisites ##
 
 * Java 8 or higher (matching the Scala version)
-* Scala 2.12
+* Scala 2.12 or 2.13
 
 
 ## Getting Scala Utils ##
@@ -35,11 +32,11 @@ where the latest artifacts can be found.
 Usage with SBT, adding a dependency to the latest version of scala utils to your sbt build definition file:
 
 ```scala
-  libraryDependencies += "org.tupol" %% "scala-utils-core" % "1.0.0"
+  libraryDependencies += "org.tupol" %% "scala-utils-core" % "2.0.0"
 ```
 or
 ```scala
-  libraryDependencies += "org.tupol" %% "scala-utils-core" % "1.0.0"
+  libraryDependencies += "org.tupol" %% "scala-utils-core" % "2.0.0"
 ```
 
 For Snapshots, the Sonatype snapshots repo needs to be added as well:
@@ -49,39 +46,14 @@ For Snapshots, the Sonatype snapshots repo needs to be added as well:
 ```
 
 
-## Usage
-
-Some `config-z` usage examples can be found under [`config-z/src/test/scala/examples`](config-z/src/test/scala/examples).
-
-
 ## What's new?
 
-**1.1.2**
-- `jdbc` module - added `PreparedStatement` support
-- `jdbc` module - added configuration and `ConnectionPool` support
+**2.0.0**
 
-**1.1.1**
-- Added an experimental `jdbc` module
-
-**1.1.0**
-  - Refactored the `configz` module
-  - Added a few more utility implicits to the `core` module
-
-
-**1.0.0**
-
-This new major version aims to bring a new and hopefully cleaner project structure.
-The `scalaz` based configuration is moved to a different module to isolate better from the core.
-In the future a `cats` based version might be added as well.
-
-More core utilities were added and the old ones were brushed up for better consistency and clarity.
-
-Attention! This version is no longer cross compiling across Scala 2.11 and 2.12.
-Only Scala 2.12 is supported at the moment.
-
-The previous versions are still available and can evolve independently on the **[`0.2.x`](https://github.com/tupol/scala-utils/tree/0.2.x)** branch.
-
-For previous versions please consult the [release notes](RELEASE-NOTES.md).
+- Cross compilation on Scala 2.12 and Scala 2.13
+- Compiled with JDK 17 targeting Java 8
+- Removed the `config-z` module
+- Removed `TraversableOps` as it will be deprecated in future Scala versions
 
 
 ## License ##

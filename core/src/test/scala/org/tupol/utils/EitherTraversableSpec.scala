@@ -3,7 +3,7 @@ package org.tupol.utils
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class EitherTraversableSpec extends AnyWordSpec with Matchers {
+class EitherIterableSpec extends AnyWordSpec with Matchers {
 
   import org.tupol.utils.EitherUtils._
   import org.tupol.utils.implicits._

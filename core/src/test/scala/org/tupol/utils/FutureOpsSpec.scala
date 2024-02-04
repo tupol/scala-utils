@@ -3,16 +3,16 @@ package org.tupol.utils
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.funsuite.AnyFunSuite
-import org.tupol.utils.FutureOps.TraversableFuturesOps
+import org.tupol.utils.FutureOps.IterableFuturesOps
 
 import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContextExecutor, Future }
 
 class FutureOpsSpec extends AnyFunSuite with Matchers with ScalaFutures {
 
   import org.tupol.utils.implicits._
 
-  implicit val ec = scala.concurrent.ExecutionContext.global
+  implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
 
   test("Success future.logSuccess") {
     val logger = ArrayBuffer[Int]()

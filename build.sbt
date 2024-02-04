@@ -51,7 +51,8 @@ lazy val publishSettings = Seq(
 
 lazy val coverageSettings = Seq(
   coverageEnabled in Test := true,
-  coverageMinimum in Test := 95,
+  coverageMinimumStmtTotal in Test := 95,
+  coverageMinimumBranchTotal in Test := 80,
   coverageFailOnMinimum in Test := true,
   coverageExcludedPackages := ".*BuildInfo.*"
 )
@@ -59,13 +60,13 @@ lazy val coverageSettings = Seq(
 lazy val basicSettings = Seq(
   organization := "org.tupol",
   name := "scala-utils",
-  scalaVersion := Versions.scala,
+  scalaVersion := Versions.scala_2_12,
   crossScalaVersions := Versions.crossScala,
   scalacOptions ++= Seq(
     "-feature",
     "-deprecation",
     "-unchecked",
-    "-Ywarn-unused-import"
+    s"-release:${Versions.targetJava}"
   ),
   updateOptions := updateOptions.value.withCachedResolution(true),
   libraryDependencies ++= CoreTestDependencies,
@@ -99,21 +100,9 @@ lazy val jdbc = (project in file("jdbc"))
   )
   .dependsOn(core % "test->test;compile->compile")
 
-lazy val config_z = (project in file("config-z"))
-  .enablePlugins(BuildInfoPlugin)
-  .settings(commonSettings: _*)
-  .settings(
-    name := "scala-utils-config-z",
-    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-    buildInfoOptions := Seq[BuildInfoOption](BuildInfoOption.BuildTime, BuildInfoOption.ToMap, BuildInfoOption.ToJson),
-    buildInfoPackage := "org.tupol.utils.config",
-    libraryDependencies ++= ConfigZDependencies
-  )
-  .dependsOn(core % "test->test;compile->compile")
-
 lazy val scala_utils = Project(
   id = "scala-utils",
   base = file(".")
 ).settings(commonSettings: _*)
-  .dependsOn(core % "test->test;compile->compile", jdbc, config_z)
-  .aggregate(core, jdbc, config_z)
+  .dependsOn(core % "test->test;compile->compile", jdbc)
+  .aggregate(core, jdbc)

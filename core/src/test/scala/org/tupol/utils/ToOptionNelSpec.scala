@@ -43,23 +43,11 @@ class ToOptionNelSpec extends AnyWordSpec with Matchers {
     }
   }
 
-  "Traversable.toOptionNel" should {
-    "return None for an empty traversable" in {
-      Traversable().toOptionNel shouldBe None
-    }
-    "return Some list for a non-empty traversable" in {
-      val col    = Traversable(1, 5, 2)
-      val result = col.toOptionNel
-      result shouldBe a[Some[_]]
-      result.get should contain theSameElementsAs col
-    }
-  }
-
   "Vector.toOptionNel" should {
-    "return None for an empty traversable" in {
+    "return None for an empty Iterable" in {
       Vector().toOptionNel shouldBe None
     }
-    "return Some list for a non-empty traversable" in {
+    "return Some list for a non-empty Iterable" in {
       val col    = Vector(1, 5, 2)
       val result = col.toOptionNel
       result shouldBe a[Some[_]]
@@ -68,10 +56,10 @@ class ToOptionNelSpec extends AnyWordSpec with Matchers {
   }
 
   "Iterable.toOptionNel" should {
-    "return None for an empty traversable" in {
+    "return None for an empty Iterable" in {
       Iterable().toOptionNel shouldBe None
     }
-    "return Some list for a non-empty traversable" in {
+    "return Some list for a non-empty Iterable" in {
       val col    = Iterable(1, 5, 2)
       val result = col.toOptionNel
       result shouldBe a[Some[_]]
@@ -80,10 +68,10 @@ class ToOptionNelSpec extends AnyWordSpec with Matchers {
   }
 
   "Iterator.toOptionNel" should {
-    "return None for an empty traversable" in {
+    "return None for an empty Iterable" in {
       Iterator().toOptionNel shouldBe None
     }
-    "return Some list for a non-empty traversable" in {
+    "return Some list for a non-empty Iterable" in {
       val col    = Seq(1, 5, 2)
       val result = col.toIterator.toOptionNel
       result shouldBe a[Some[_]]

@@ -34,7 +34,7 @@ trait TextSource {
 }
 
 final case class TextSourceException(private val message: String) extends Exception(message) {
-  def this(message: String, cause: Throwable) {
+  def this(message: String, cause: Throwable) = {
     this(message)
     initCause(cause)
   }
