@@ -3,9 +3,11 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val scala            = "2.12.12"
-    val crossScala       = Seq(scala)
-    val scalaz           = "7.2.26"
+    val targetJava       = "8"
+    val scala_2_12       = "2.12.18"
+    val scala_2_13       = "2.13.12"
+    val scala            = scala_2_13
+    val crossScala       = Seq(scala_2_12, scala_2_13)
     val scalatest        = "3.1.1"
     val scalacheck       = "1.15.1"
     val json4s           = "3.6.8"
@@ -30,13 +32,6 @@ object Dependencies {
     "com.zaxxer"            % "HikariCP"    % Versions.hikari         % Provided,
     "org.testcontainers"    % "postgresql"  % Versions.testcontainers % Test,
     "org.postgresql"        % "postgresql"  % Versions.postgresql     % Test,
-  )
-
-  val ConfigZDependencies: Seq[ModuleID] = Seq(
-    "com.typesafe.scala-logging" % "scala-logging" % Versions.scala_logging cross CrossVersion.binary,
-    "org.scala-lang" % "scala-reflect" % Versions.scala,
-    "org.scalaz" % "scalaz-core" % Versions.scalaz cross CrossVersion.binary,
-    "com.typesafe" % "config" % Versions.typesafe_config
   )
 
 }

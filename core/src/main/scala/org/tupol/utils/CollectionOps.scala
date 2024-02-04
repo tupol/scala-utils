@@ -48,12 +48,6 @@ object CollectionOps {
     def toOptionNel: Option[Set[T]] = if (xs.isEmpty) None else Some(xs)
   }
 
-  implicit class TraversableOps[T](xs: Traversable[T]) {
-
-    /** Convert a traversable into an option of None if empty or Some of elements; Nel: Non-Empty List */
-    def toOptionNel: Option[Traversable[T]] = if (xs.isEmpty) None else Some(xs)
-  }
-
   implicit class VectorOps[T](xs: Vector[T]) {
 
     /** Convert a vector into an option of None if empty or Some of elements; Nel: Non-Empty List */

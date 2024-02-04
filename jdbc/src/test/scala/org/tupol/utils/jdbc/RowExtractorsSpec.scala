@@ -21,7 +21,7 @@ class RowExtractorsSpec extends AnyWordSpec with Matchers with IdiomaticMockito 
   val someClassReference  = SomeClass("other random string", Int.MaxValue, UUID.randomUUID())
   val otherClassReference = OtherClass(Int.MaxValue, "some random string")
 
-  implicit val someClassExtractor = new RowExtractor[SomeClass] {
+  implicit val someClassExtractor: RowExtractor[SomeClass] = new RowExtractor[SomeClass] {
     def extract(rs: ResultSet): Try[SomeClass] =
       for {
         col1 <- rs.extract[String](COL1)
@@ -30,7 +30,7 @@ class RowExtractorsSpec extends AnyWordSpec with Matchers with IdiomaticMockito 
       } yield SomeClass(col1, col2, col3)
   }
 
-  implicit val otherClassExtractor = new RowExtractor[OtherClass] {
+  implicit val otherClassExtractor: RowExtractor[OtherClass] = new RowExtractor[OtherClass] {
     def extract(rs: ResultSet): Try[OtherClass] =
       for {
         col1 <- rs.extract[Int](COL1)

@@ -29,18 +29,18 @@ import scala.util.{ Failure, Success, Try }
 object TryUtils {
 
   /**
-   * Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if ANY of the Trys is a failure.
+   * Flatten a `Iterable[Try[T]]` to a `Try[Iterable[T]]`, which is a failure if ANY of the Trys is a failure.
    * In case of a failure, the latest `Failure` will be returned
    */
-  def allOkOrFail[T](trys: Traversable[Try[T]]): Try[Traversable[T]] = {
+  def allOkOrFail[T](trys: Iterable[Try[T]]): Try[Iterable[T]] = {
     import scala.collection.immutable.Vector
     trys.foldLeft(Try(Vector.empty[T])) { (acc, tryField) =>
       tryField.flatMap(tf => acc.map(_ :+ tf))
     }
   }
 
-  /** Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if ALL of the Trys is a failure. */
-  def collectOkOrFail[T](trys: Traversable[Try[T]]): Try[Traversable[T]] =
+  /** Flatten a `Iterable[Try[T]]` to a `Try[Iterable[T]]`, which is a failure if ALL of the Trys is a failure. */
+  def collectOkOrFail[T](trys: Iterable[Try[T]]): Try[Iterable[T]] =
     trys match {
       case Nil => Success(Nil)
       case _   =>

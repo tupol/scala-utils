@@ -26,20 +26,20 @@ package org.tupol.utils
 /** Implicit decorator functions for `Either[A, B]` and `F[Either[A, B]]` */
 object EitherOps {
 
-  /** Simple decorator for the `Traversable[Either[A, B]]` */
-  implicit class TraversableEitherOps[A, B](val eithers: Traversable[Either[A, B]]) {
-    def flattenEithers: Either[A, Traversable[B]]  = EitherUtils.flatten(eithers)
-    def separate: (Traversable[A], Traversable[B]) = EitherUtils.separate(eithers)
-    def lefts: Traversable[A]                      = EitherUtils.lefts(eithers)
-    def rights: Traversable[B]                     = EitherUtils.rights(eithers)
+  /** Simple decorator for the `Iterable[Either[A, B]]` */
+  implicit class IterableEitherOps[A, B](val eithers: Iterable[Either[A, B]]) {
+    def flattenEithers: Either[A, Iterable[B]] = EitherUtils.flatten(eithers)
+    def separate: (Iterable[A], Iterable[B])   = EitherUtils.separate(eithers)
+    def lefts: Iterable[A]                     = EitherUtils.lefts(eithers)
+    def rights: Iterable[B]                    = EitherUtils.rights(eithers)
   }
 
   /** Simple decorator for the `Array[Either[A, B]]` */
   implicit class ArrayEitherOps[A, B](val eithers: Array[Either[A, B]]) {
-    def flattenEithers: Either[A, Traversable[B]]  = EitherUtils.flatten(eithers)
-    def separate: (Traversable[A], Traversable[B]) = EitherUtils.separate(eithers)
-    def lefts: Traversable[A]                      = EitherUtils.lefts(eithers)
-    def rights: Traversable[B]                     = EitherUtils.rights(eithers)
+    def flattenEithers: Either[A, Iterable[B]] = EitherUtils.flatten(eithers)
+    def separate: (Iterable[A], Iterable[B])   = EitherUtils.separate(eithers)
+    def lefts: Iterable[A]                     = EitherUtils.lefts(eithers)
+    def rights: Iterable[B]                    = EitherUtils.rights(eithers)
   }
 
   implicit class EitherOps[L, R](either: Either[L, R]) {

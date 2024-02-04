@@ -5,10 +5,9 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 resolvers += Resolver.url("typesafe", url("https://repo.typesafe.com/typesafe/ivy-releases/"))(Resolver.ivyStylePatterns)
 
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.9.12")
-addSbtPlugin("com.github.sbt" % "sbt-pgp"      % "2.1.2")
 addSbtPlugin("com.github.sbt" % "sbt-release"  % "1.1.0")
 
-addSbtPlugin("org.scoverage"    % "sbt-scoverage"        % "1.9.1")
+addSbtPlugin("org.scoverage"    % "sbt-scoverage"        % "2.0.9")
 addSbtPlugin("com.eed3si9n"     % "sbt-assembly"         % "0.14.6")
 addSbtPlugin("com.eed3si9n"     % "sbt-buildinfo"        % "0.10.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager"  % "1.3.6")

@@ -93,17 +93,17 @@ object TryOps {
 
   }
 
-  /** Simple decorator for the `Traversable[Try[_]]` */
-  implicit class TraversableTryOps[T](val trys: Traversable[Try[T]]) {
+  /** Simple decorator for the `Iterable[Try[_]]` */
+  implicit class IterableTryOps[T](val trys: Iterable[Try[T]]) {
 
     /**
-     * Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if any if the Trys is a failure.
+     * Flatten a `Iterable[Try[T]]` to a `Try[Iterable[T]]`, which is a failure if any if the Trys is a failure.
      * In case of a failure, the latest `Failure` will be returned
      */
-    def allOkOrFail: Try[Traversable[T]] = TryUtils.allOkOrFail(trys)
+    def allOkOrFail: Try[Iterable[T]] = TryUtils.allOkOrFail(trys)
 
-    /** Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if ALL of the Trys is a failure. */
-    def collectOkOrFail: Try[Traversable[T]] = TryUtils.collectOkOrFail(trys)
+    /** Flatten a `Iterable[Try[T]]` to a `Try[Iterable[T]]`, which is a failure if ALL of the Trys is a failure. */
+    def collectOkOrFail: Try[Iterable[T]] = TryUtils.collectOkOrFail(trys)
 
   }
 
@@ -114,9 +114,9 @@ object TryOps {
      * Flatten a `Array[Try[T]]` to a `Try[Array[T]]`, which is a failure if any if the Trys is a failure.
      * In case of a failure, the latest `Failure` will be returned
      */
-    def allOkOrFail: Try[Traversable[T]] = TryUtils.allOkOrFail(trys)
+    def allOkOrFail: Try[Iterable[T]] = TryUtils.allOkOrFail(trys)
 
-    /** Flatten a `Traversable[Try[T]]` to a `Try[Traversable[T]]`, which is a failure if ALL of the Trys is a failure. */
-    def collectOkOrFail: Try[Traversable[T]] = TryUtils.collectOkOrFail(trys)
+    /** Flatten a `Iterable[Try[T]]` to a `Try[Iterable[T]]`, which is a failure if ALL of the Trys is a failure. */
+    def collectOkOrFail: Try[Iterable[T]] = TryUtils.collectOkOrFail(trys)
   }
 }
