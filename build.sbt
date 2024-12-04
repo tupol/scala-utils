@@ -70,8 +70,9 @@ lazy val basicSettings = Seq(
   ),
   updateOptions := updateOptions.value.withCachedResolution(true),
   libraryDependencies ++= CoreTestDependencies,
-  scoverage.ScoverageKeys.coverageExcludedFiles := ".*BuildInfo.*"
-
+  libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
+  scoverage.ScoverageKeys.coverageExcludedFiles := ".*BuildInfo.*",
+  evictionErrorLevel := Level.Warn
 )
 val commonSettings = basicSettings ++ coverageSettings ++ publishSettings
 

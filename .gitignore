@@ -66,3 +66,21 @@ project/plugins/project/
 .history
 .cache
 .lib/
+
+# VS Code files for those working on multiple tools
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+ # Generated Metals (Scala Language Server) files
+ # Reference: https://scalameta.org/metals/
+.metals/
+.bloop/
+project/metals.sbt

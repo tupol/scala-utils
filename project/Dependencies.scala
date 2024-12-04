@@ -4,8 +4,8 @@ object Dependencies {
 
   object Versions {
     val targetJava       = "8"
-    val scala_2_12       = "2.12.18"
-    val scala_2_13       = "2.13.12"
+    val scala_2_12       = "2.12.20"
+    val scala_2_13       = "2.13.15"
     val scala            = scala_2_13
     val crossScala       = Seq(scala_2_12, scala_2_13)
     val scalatest        = "3.1.1"
